@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: label-demo3
+  labels: # labels are appear in metadata sectin
+    environment: system
+    team: sys-ops
+    project: os3-elearning
+spec:
+  containers:
+    - name: mysql-container
+      image: mysql
+      ports:
+        - containerPort: 3306
+          protocol: TCP
