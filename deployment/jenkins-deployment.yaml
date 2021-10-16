@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+  labels:
+    environment: dev
+    app: jenkins
+  annotations:
+    imageregistry: "https://hub.docker.com/" # subjective information
+spec:
+  replicas: 4
+  minReadySeconds: 30
+  selector:
+    matchLabels:
+      app: jenkins
+      environment: production
+  strategy:
+    type: rollingUpdate
+    rollingUpdate:
+      maxSurge: 30%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: jenkins
+        environment: production
+        version: "1.6"
+        
+
+
+
+
