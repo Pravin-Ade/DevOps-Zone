@@ -26,6 +26,13 @@ spec:
         app: jenkins
         environment: production
         version: "1.6"
+    spec:
+      containers: 
+        - name: jenkin-container
+          image: jenkins:2.60.3
+          ports:
+            - containerPort: 8080
+              protocol: TCP
         
 
 
