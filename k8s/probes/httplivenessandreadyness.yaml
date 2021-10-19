@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Pod
+metadeta:
+  name: http-probe-practice
+spec:
+  containers:
+    - name: http-servers
+      image: httpd:latest
+      ports:
+        - containersPort: 80
+          protocol: TCP
+          readinessProbe:
+          httpGet:
+            port: 80
+            path: /
+        initialDelaySecond: 10
+        periodSeconds: 5
+        successThreshold: 1
+        failureThreshold: 1
+

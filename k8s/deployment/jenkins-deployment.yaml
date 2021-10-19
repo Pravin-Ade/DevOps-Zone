@@ -7,7 +7,7 @@ metadata:
     environment: dev
     app: jenkins
   annotations:
-    imageregistry: "https://hub.docker.com/" # subjective information
+    imageregistry: "https://hub.docker.com/" # subjective nformation
 spec:
   replicas: 4
   minReadySeconds: 30
