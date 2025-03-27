@@ -1,26 +1,34 @@
-## A Step-by-Step Guide to Creating Users in Kubernetes
+# A Step-by-Step Guide to Creating Users in Kubernetes
 
-Creating users in Kubernetes is typically done via Kubernetes RBAC system, which helps you manage access to cluster resources. However, Kubernetes itself doesn't have a built-in user management system. Instead, users are typically managed outside Kubernetes (e.g., via an identity provider like Active Directory or using tools like kubectl or kubeconfig files).
+Creating users in Kubernetes is typically done via Kubernetes' **RBAC** (Role-Based Access Control) system, which helps manage access to cluster resources. However, Kubernetes itself doesn't have a built-in user management system. Instead, users are typically managed outside Kubernetes (e.g., via an identity provider like Active Directory or using tools like `kubectl` or `kubeconfig` files).
 
-1. Authentication with TLS Certificates:
-When you set up a Kubernetes cluster (e.g., using kubeadm), authentication is handled through TLS certificates. Any user with a valid certificate signed by the cluster’s certificate authority (CA) is considered authenticated. The username is derived from the certificate’s Common Name (CN) field (e.g., “/CN=bob”).
+### 1. Authentication with TLS Certificates
+When you set up a Kubernetes cluster (e.g., using `kubeadm`), authentication is handled through **TLS certificates**. Any user with a valid certificate signed by the cluster’s certificate authority (CA) is considered authenticated. The username is derived from the certificate’s **Common Name (CN)** field (e.g., “/CN=bob”).
 
-2. Role-Based Access Control (RBAC):
-Once authenticated, Kubernetes uses RBAC (Role-Based Access Control) to determine whether the user is allowed to perform certain actions on resources in the cluster.
+### 2. Role-Based Access Control (RBAC)
+Once authenticated, Kubernetes uses **RBAC** to determine whether the user is allowed to perform certain actions on resources in the cluster.
 
-3. Using kubectl for Access:
-kubectl is the command-line tool used to interact with Kubernetes. It uses these TLS certificates to authenticate with the API server. The connection details, including certificates, are stored in a kubeconfig file.
+### 3. Using `kubectl` for Access
+`kubectl` is the command-line tool used to interact with Kubernetes. It uses these TLS certificates to authenticate with the API server. The connection details, including certificates, are stored in a **kubeconfig file**.
 
-4. Kubeconfig File:
-When you set up Kubernetes with kubeadm, a kubeconfig file is automatically created. This file typically provides full admin rights (i.e., the cluster-admin RBAC role). It’s crucial not to share this file with your team unless necessary, as it can give them complete control over the cluster.
+### 4. Kubeconfig File
+When you set up Kubernetes with `kubeadm`, a **kubeconfig file** is automatically created. This file typically provides full admin rights (i.e., the **cluster-admin** RBAC role). It’s crucial not to share this file with your team unless necessary, as it can give them complete control over the cluster.
 
-5. Usernames and Best Practices:
+### 5. Usernames and Best Practices
 By default, the username in the auto-generated kubeconfig and certificate is ‘admin’. However, it’s better to use unique usernames that match your organization’s naming conventions. This will make it easier if you need to integrate with external authentication services later.
 
+---
 
-### Create a User Account
+## Create a User Account
 
-openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=Infosys"
+To create a new user (e.g., "pravin"), follow these steps:
+
+1. **Create a Certificate Signing Request (CSR)**
+
+   Run the following command to generate a CSR for the user:
+
+   ```bash
+   openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=Infosys"
 
 Now we have pravin.csr, we need to have it signed by the cluster CA. for that we create CertificateSigningRequest object.
 
