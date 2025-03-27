@@ -1,0 +1,20 @@
+# Development Team: Responsible for deploying and managing the application inside the dev namespace.
+# System Administration Team: Responsible for managing cluster-wide resources and troubleshooting,
+# but not allowed to deploy apps in dev.
+# The goal is to allow the Development Team to manage deployments, services, and pods in the dev namespace,
+# but prevent them from accessing other namespaces or resources outside the dev namespace.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  # The namespace in which this role applies
+  namespace: dev
+  name: dev-role
+rules:
+- apiGroups: [""]
+  # Resources in the core API group
+  resources: ["pods", "services", "deployments"]
+  verbs: ["get", "list", "create", "update", "delete"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "create", "update", "delete"]
