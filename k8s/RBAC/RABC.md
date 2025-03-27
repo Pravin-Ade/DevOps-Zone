@@ -108,3 +108,9 @@ Now, Let's test the pravin's kubeconfig by running the 'kubectl version' command
 Now lets's go and list the running pods using pravin's kubeconfig
 
     kubectl get pods --kubeconfig=pravin-config
+
+**3. Assign Roles Within a Namespace**
+
+**scenario:** We need to give Bob a role that will give him complete freedom within the ‘bob’ namespace but nothing else outside of his namespace.
+
+    kubectl create rolebinding pravin-admin --namespace=ns-pravin --clusterrole=admin --user=pravin
