@@ -31,77 +31,80 @@ To create a new user (e.g., "pravin"), follow these steps:
    openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=Infosys"
 
 Now we have pravin.csr, we need to have it signed by the cluster CA. for that we create CertificateSigningRequest object.
+Now that we have the `pravin.csr` file, we need to have it signed by the cluster's **Certificate Authority (CA)**. To do this, we create a **CertificateSigningRequest (CSR)** object in Kubernetes.
 
+Run the following command to create the CSR object:
 
-`cat <<EOF | kubectl apply -f -
-apiVersion: certificates.k8s.io/v1
-kind: CertificateSigningRequest
-metadata:
-  name: pravin
-spec:
-  request: $(cat pravin.csr | base -w 0)
-  signerName: kubernetes.io/kube-apiserver-client
-  expirationSeconds: 86400  # one day
-  usages:
-  - client auth
-EOF`
+    cat <<EOF | kubectl apply -f -
+    apiVersion: certificates.k8s.io/v1
+    kind: CertificateSigningRequest
+    metadata:
+    name: pravin
+    spec:
+    request: $(cat pravin.csr | base64 -w 0)
+    signerName: kubernetes.io/kube-apiserver-client
+    expirationSeconds: 86400  # one day
+    usages:
+    - client auth
+    EOF
 
 Once the CSR has been created, it enters a Pending' condition
 
-kubectl get csr
+    kubectl get csr
 
 Now, we want to approve CSR object.
 
-kubectl certificate approve pravin.
+    kubectl certificate approve pravin.
 
 Now if we check the CSR again we see that it is in a Approved, Issued state.
 
-kubectl get csr
+    kubectl get csr
 
 To retrieve the certificate, we can run the following command
 
-kubectl get csr pravin -o jsonpath='{.status.certificate}' | base64 --decode > pravin-access.crt
+    kubectl get csr pravin -o jsonpath='{.status.certificate}' | base64 --decode > pravin-access.crt
 
 or
 
-openssl x509 -req -in pravin.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out pravin-access.crt
+    openssl x509 -req -in pravin.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out pravin-access.crt
 
 Let's verify that we have a certificate for pravin
 
-cat pravin-access.crt
+    cat pravin-access.crt
 
 Next requiremnt is pravin kubeconfig file is the clustr CA certificate. To retrieve it, use folowing command.
 
-kubectl config view -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' --raw | base64 --decode - > k8s-ca.crt
+    kubectl config view -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' --raw | base64 --decode - > k8s-ca.crt
 
 Now, we can start creating pravin's kubeconfig file.
 
-2. Configure Your Kubernetes Cluster
+**2. Configure Your Kubernetes Cluster**
+
 Let's set up the cluster configuration in pravin's kubeconfig file. pull these details from our existing kubeconfig using the command below.
 
-kubectl config set-cluster $(kubectl config view -o jsonpath='{.clusters[0].name}') --server=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}') --certificate-authority=k8s-ca.crt --kubeconfig=pravin-config --embed-cert
+    kubectl config set-cluster $(kubectl config view -o jsonpath='{.clusters[0].name}') --server=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}') --certificate-authority=k8s-ca.crt --kubeconfig=pravin-config --embed-cert
 
 look at the contents of the pravin-config, we see that the cluster configuration has been set.
 
-cat pravin-config
+    cat pravin-config
 
 We can see that the userand context list are empty. Let's set up the user next which will import pravin's key and cert into the file.
 
-kubectl config set-credentials pravin --client-certificate=pravin-access.crt --client-key=pravin.key --embed-certs --kubeconfig=pravin-config
+    kubectl config set-credentials pravin --client-certificate=pravin-access.crt --client-key=pravin.key --embed-certs --kubeconfig=pravin-config
 
 Final kubeconfig requirement is to create a context.
 
-kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=infosys --user=pravin --kubeconfig=pravin-config
+    kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=infosys --user=pravin --kubeconfig=pravin-config
 
 Finally, we will want to specify the context that pravin will use for his kubectl commands.
 
-kubectl config use-context pravin --kubeconfig=pravin-config
+    kubectl config use-context pravin --kubeconfig=pravin-config
 
 
 Now, Let's test the pravin's kubeconfig by running the 'kubectl version' command.
 
-kubectl version --kubeconfig=pravin-config
+    kubectl version --kubeconfig=pravin-config
 
 Now lets's go and list the running pods using pravin's kubeconfig
 
-kubectl get pods --kubeconfig=pravin-config
+    kubectl get pods --kubeconfig=pravin-config
