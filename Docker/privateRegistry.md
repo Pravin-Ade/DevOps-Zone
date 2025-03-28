@@ -12,3 +12,8 @@ Replace my.registry.address.port with localhost:5000 because our registry is run
     docker push localhost:5000/ubuntu
 
     docker logs -f registry
+
+#### verify local registry setup
+    docker exec -it registry sh
+
+inside registry run cd var/lib/registry you would see tehe docker folder.
