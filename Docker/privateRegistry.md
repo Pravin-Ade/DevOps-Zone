@@ -11,3 +11,4 @@ Replace my.registry.address.port with localhost:5000 because our registry is run
     docker tag ubuntu localhost:5000/ubuntu:24.04
     docker push localhost:5000/ubuntu
 
+    docker logs -f registry
