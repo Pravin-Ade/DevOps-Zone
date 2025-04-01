@@ -17,3 +17,8 @@ Replace my.registry.address.port with localhost:5000 because our registry is run
     docker exec -it registry sh
 
 inside registry run cd var/lib/registry you would see tehe docker folder.
+
+### Q. How to list of images are present in the registry?
+
+  curl -X GET http://registry.example.com:5000/v2/_catalog or curl -X GET localhost:5000/v2/_catlog
+
