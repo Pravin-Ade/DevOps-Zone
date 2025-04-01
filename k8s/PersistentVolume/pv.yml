@@ -1,0 +1,179 @@
+---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: pv-vol-1
+# spec:
+#   accessModes:
+#     - "ReadWriteOnce"
+#   capacity:
+#     storage: 10Gi
+#   HostPath:
+#     path: /tmp/data
+
+## Dyanamic Provisioning
+#------------------------
+# u can def provisoner such as google storage, alasticBlockStorage that can automatically 
+# provision storage on google cloud.
+# And attach that to pod when claim is made. That's called dyanamic provisioning of volumes.
+
+## u do that by storage class object object with the apiVersion: storage.k8s.io/v1. Specify a name and use 
+## provisioner as kubernetes.io/gce-pd 
+
+## now have a storage class - so we no longer need the pv defination file bcz pv and any associated 
+# storage
+## is going to be creted automatically when the storage class is created. for the pvc to use the stoarge
+## class we defined we specify the storage class name in pvc def file. That's how the pvc know the which storage
+## class to use.
+##  next time a pvc is created.the storage class associated with is uses the defined provisioner
+## to provision a new disk with required size on aws and then creates a persistent volume and then
+## binds the pvc to that volume.
+
+################### so, remember thats it still creates a pv.
+
+## its just that you don't have to manually create pv anymore it's created automatically by 
+# the storage class.
+
+## we used the aws provisional to create a volume on aws.
+## ther are many provisioner 
+##### AWSElasticBlockStore, AzureFile, CephFS, NFS, iSCSI, etc.
+
+# ---
+############# pv-def.yaml
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: pv-vol1
+# spec:
+#   accessModes:
+#     - "ReadWriteOnce"
+#   capacity:
+#     storage: 500Mi
+
+#   awsElasticBlockStore:
+#     volumeID: <a34fhf>
+#     fsType: ext4
+---
+## storage-class-def-file.yaml
+
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: aws-storage
+# provisioner: kubernetes.io/aws-ebs
+# parameters:
+#   type: io1
+#   ### ssd and high performance EBS storage
+#   fsType: ext4
+
+---
+## pvc-def.yaml
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: aws-storag
+    ## ReadWriteonce | ReadWriteMany | ReadOnlyMany
+  resources:
+    requests:
+      storage: 500Mi
+
+## pvc-def.yaml
+
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: myclaim
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: local-path
+#     ## ReadWriteonce | ReadWriteMany | ReadOnlyMany
+#   resources:
+#     requests:
+#       storage: 200Mi
+
+
+
+--- 
+# pod-def.yaml
+
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: random-number-generator
+#   labels:
+#     name: myapp
+# spec:
+#   containers:
+#   - name: alpine
+#     image: alpine
+#     command: ["shuf -i 0-100 -n 1 >> /opt/"]
+#     volumeMounts:
+#     - mountPath: /opt
+#       name: data-vol
+#     volumes: 
+#     - name: data-vol
+#       persistentVolumeClaim:
+#         claimName: myclaim
+
+        
+  # tolerations:
+  # - effect: NoSchedule
+  #   key: node-role.kubernetes.io/master
+  # nodeSelector:
+  # node-role.kubernetes.io/master: ""
+
+
+#------------------------
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-pv-pod
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: myclaim
+  containers:
+    - name: task-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+        
+
+
+
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: mypv
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Recycle
+#   storageClassName: slow
+#   mountOptions:
+#     - hard
+#     - nfsvers=4.1
+#   nfs:
+#     path: /tmp
+#     server: 172.17.0.2
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+# this is init container manifest 
+# These containers are created one by one and only after its completion, 
+# the normal containers are created.
+# We will use these containers for any initial setup or configuration kind of purposes
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+spec:
+  initContainers:
+    - name: init-cont1
+      image: alpine:3
+      command:
+        - sleep
+        - "30"
+    - name: init-cont2
+      image: alpine:3
+      command:
+        - sleep
+        - "30"
+  containers:
+    - name: nginx
+      image: nginx:1.23
+      ports:
+        - containerPort: 80
+          protocol: TCP

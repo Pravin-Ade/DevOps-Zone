@@ -1,0 +1,24 @@
+apiVersion:
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: registry.k8s.io/busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5 
+      # The initialDelaySeconds field tells the 
+      # kubelet that it should wait 5 seconds before performing the first probe
+      periodSeconds: 5
+      # periodSeconds field specifies that the kubelet should perform a liveness probe every 5 seconds

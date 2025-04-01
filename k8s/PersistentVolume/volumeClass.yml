@@ -1,0 +1,31 @@
+# hostPath
+# mounts a file or dir from host node's filesystem into your pod.
+# remain even after the pod is terminated.
+# host issues might cause problem to host path. 
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: redis-hostPath
+spec:
+  containers:
+    - name: redis-container
+      image: redis
+      # path inside container
+      volumeMounts:
+        mountPath: /test-mnt
+        name: test-vol
+  # path on local machine
+  volumes:
+    - name: test-vol
+      hostPath:
+        path: /test-vol
+        
+
+### kubectl create -f redis-hostpath.yaml
+### kubectl get po
+### kubectl exec redis-hostpath df /test-mnt 
+### Note:
+  # pod running on: node
+  # mount (inside pod): /test-mnt
+  # volume: /test-vol (directory on node)

@@ -1,0 +1,24 @@
+### jobs is used to managed pods to run some script/task and exit gracefully
+---
+apiVersion: batch/v1
+kind: job
+metadata:
+  name: devopsshala-job-demo
+  namespace: devopsshala
+  label:
+    env: UAT
+    app: devopshala-app
+spec:
+  template:
+    metadata:
+      labels:
+        app: devopsshala-job-demo
+    spec:
+      containers:
+        - name: devopshala-job
+          image: alpine
+          args:
+            - /bin/bash
+            - -c
+            - sleep 2m
+      restartPolicy: onFailure
