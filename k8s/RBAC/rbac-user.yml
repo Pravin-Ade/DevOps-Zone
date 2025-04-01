@@ -1,0 +1,119 @@
+
+useradd -m -d /home/pravin pravin 
+passwd pravin
+ 
+
+1. openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=Infy"
+
+2.  
+
+cat  <<EOF | kubectl apply -f  -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: pravin-access
+spec:
+  groups:
+  - system:authenticated
+  request: $(cat pravin.csr | base64 -w 0)
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth 
+EOF
+
+
+3. kubectl get csr
+
+4. kubectl certificate approve pravin-access	
+
+5. kubectl get csr
+
+6. kubectl get csr nipin-access -o jsonpath='{.status.certificate}' | base64 --decode >  nipin.crt
+
+or
+
+openssl x509 -req -in pravin.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out pravin.crt -days 365
+
+7. cat nipin.crt
+
+
+## retrive CA certificate to create user kubeconfig file
+ 
+8. kubectl config view -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' --raw | base64 --decode - > k8s-ca.crt
+
+9. configure ur k8s cluster
+
+kubectl config set-cluster $(kubectl config view -o jsonpath='{.clusters[0].name}') --server=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}') --certificate-authority=k8s-ca.crt --kubeconfig=pravin-config --embed-certs
+
+
+10. cat nipin-config
+
+
+11. Lets setup the user next which will import k8s-admin's key and cert into the file
+
+
+$ kubectl config set-credentials pravin --client-certificate=pravin.crt --client-key=pravin.key --embed-certs --kubeconfig=pravin-config
+
+12. The final kubeconfig requirement is to create a contex
+
+$ kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=comcast --user=pravin --kubeconfig=pravin-config
+
+
+13.Specify the context that k8s-admin will use for his kubectl commands
+
+$ kubectl config use-context pravin --kubeconfig=pravin-config
+
+14. Now let’s test k8s-admin’s kubeconfig by running the ‘kubectl version’ command:
+
+$ kubectl version --kubeconfig=pravin-config
+
+15. share user kubeconfig to userdir change ownership and group
+
+16. set environment vaiable to kubeconfig
+
+export KUBECONFIG=/home/k8s-admin/.kube/k8s-admin-config
+
+------------------------------------ EOF-------------------
+
+#kubectl -n comcast create role pravin-role --verb create,delete --resource pod,deployment,sts,replicasets,daemonsets,configmaps,apiservices,namespaces,no
+
+
+kubectl get po -n comcast
+
+kubectl edit config view
+
+
+vineetha-role-binding | vineetha-role
+kubectl get rolebindings -n comcast
+kubectl get role -n comcast
+
+kubectl get deployment -n comcast
+
+worker-node3
+
+kubectl patch node node2-worker -p '{"spec":{"podCIDR":"10.244.0.0/16"}}'
+
+
+export KUBECONFIG=/home/k8s-admin/.kube/k8s-admin-config
+save and exit
+
+
+
+kubectl api-resources | grep -iE 'role|KIND'
+kubectl explain Role | head -n 2
+
+
+------------------------- security context
+
+https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+
+
+Branching strategy
+
+QA Staging Production
+
+
+
+
+
+

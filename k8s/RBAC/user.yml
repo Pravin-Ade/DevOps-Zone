@@ -1,0 +1,136 @@
+#1 kubectl create ns dev or opt
+#2 openssl genrsa -out pravin.key 2048 | openssl genrsa -out user2.key 2048
+#3 User: generate user CSR:
+          # openssl req -new -key pravin.key -out pravin.csr or openssl req -new -key pravin.key -out pravin.csr -subj "/CN=pravin/O=dev"
+          # ls -ltr
+          # cat pravin.csr
+
+          # we have csr, we need to have it signed by the cluster CA. for that we create certificateSigningRequest
+
+          # cat pravin.csr | base64 -w 0 |
+          # copy output and past it into csr yaml file.
+
+#4 Admin: use Kubernetes API server to sign the CSR:
+
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: pravin
+spec:
+  groups:
+  - system:authenticated
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ25UQ0NBWVVDQVFBd1FqRUxNQWtHQTFVRUJoTUNTVTR4RXpBUkJnTlZCQWdNQ2xOdmJXVXRVM1JoZEdVeApEVEFMQmdOVkJBb01CRWx1Wm5reER6QU5CZ05WQkFNTUJuQnlZWFpwYmpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCCkJRQURnZ0VQQURDQ0FRb0NnZ0VCQUtzTTZONURDNmRLMGh2TmhyeGc4cTYvSW43NGNSUFRHTjRtQjFsdFRCMzMKVit1Z2g1cmxQdmNPakJtZStmek5qM0hJZmV2NjlIb0IxMUFWZDdCZmJzTGI0RVJJbXBHMG0vTFlseXFpamZrRgpTMW1vZnNnM2NmNVdKa1lsZ3BMV1JZaGhyT2RBT1Q3ZTcrczdZK2diSFdScHRtQzRlT1kva0RaMU9yUUhZUGl1Ckx1cjVIQ2swUVFYRkE3N2JmOHozbktTWGlVbTVmekFaZFRwdGQyL0xZWjkwWGVxOXdOdVllMDkwNVpYeUJISTUKMUNhYmZMcCt0bzQyUTN2NHFvcm1GMU13VnByQjB5RGl3a3BxMTVBZHlBOE9oQUtRNS8wK2Vpd1VJelF0V2gzawpwQUNieGhHTmRYbEhYZHFqZFFTcW4vWmp1ZmMrS21ZY2pmN0ZiZ04wM0wwQ0F3RUFBYUFXTUJRR0NTcUdTSWIzCkRRRUpBakVIREFWamJHVmhjakFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBb3hCbWNPMnlLWWwzTzg2N000WkMKc0xiQmhscU5xVHBaMFVIaGRwTGppN3R5UzYyRjRRVzd6WUhhNUFuNUJueDFsN0RROW1mRmpMZi8yeENOUHc2YQpwNlh6RzAreFZUb21KYUpBRDk2aDV1WGJSUEp6eFgzckhYTUVmZXRPbVp6OWtaRkF3akdLWElFV1UvQzExc0p0CjNEdCtFWGJUYkxPNW1mYnBPa3I3dTlhVjFFeFNvQ1RFZXBFbDJDRExMK08zZjNDa09ycmxvTW1jVjZNVjRMQ3MKQmdZcnJXSFFSOWhIcVFWTFRaT1NQSXorZUliRUcxOUU1NzRFNCtDRTdPZVgwbjVEYW5kelhLd2lDMHNMa0VtawpqelVyM2F1by9yKytvVDIxT2lQZjByNklKVHJJSDh5d0l2OFNIVVpLUkFrYk1HbHZYVzdGNXdtTFpUMGlZWndKCkt3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth 
+
+  #or
+cat  <<EOF | kubectl apply -f  -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: pravin-access
+spec:
+  groups:
+  - system:authenticated
+  request: $(cat pravin.csr | base64 -w 0)
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth 
+EOF
+
+
+  # kubectl apply -f csr.yml
+  # kubectl get csr pravin (pending)
+
+
+
+#5 Admin (approver): approve or deny the CSR in the Kubernetes API:
+        # kubectl certificate approve pravin
+
+#6 Admin: extract the approved and signed certificate from the Kubernetes API:
+
+        # kubectl get csr pravin -o jsonpath='{.status.certificate}' | base64 --decode > pravin.crt
+
+        ## kubectl config view -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' --raw | base64 --decode - > k8s-ca.crt
+
+#8 User: use with kubectl via options or kubeconfig:
+
+
+##### use to connect APi server-------------------
+
+# kubectl config set-credentials pravin --client-key=pravin.key --client-certificate=pravin.crt
+
+# create user
+# kubectl config set-context pravin --cluster=kubernetes --user=pravin
+
+# kubectl config use-context pravin
+
+# kubectl config get-contexts
+
+# --------------------- user created
+
+# Now role and rolbinding need create for authorization in ns dev
+
+
+# create role in dev namesoace
+      # kubectl -n comcast create role developer --verb list,watch,get --resource pods -oyaml > pod-reader.yaml
+
+# create rolebinding for user
+      # kubectl -n comcast create rolebinding pod-readrer-role-binding --role developer --user pravin
+
+# kubectl auth can-i list pods --as new-user -n dev
+
+
+# kubectl create clusterrole deployment-clusterrol --verb create --resource Deployment,Daemonset,StatefullSet 
+
+
+### ----------------------------------------------------------------------------------------------------------------
+
+#step 1st: add user on server and add to wheel group or give root previledge
+
+### useradd -G wheel <UserName>
+### passwd <UserName>
+
+# step 2nd:  Create a User Account 
+
+#  openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=devops"
+
+#  cat pravin.csr | base64 -w 0 
+# (output of this command copy and paste to CertificateSigningRequest yaml file)
+
+# kubectl create -f k8s-csr.yaml
+
+# approve the CSR object
+#  kubectl get csr (pending)
+#  kubectl certificate approve pravin
+
+# (pravin's base64-encoded, signed certificate has been and made available in the ‘status.certificate’ field of the CSR object.to retrieve the certificate,
+# kubectl get csr pravin -o jsonpath='{.status.certificate}' | base64 --decode > pravin.crt
+# Let’s verify that we have a certificate for pravin
+
+# cat pravin.crt
+
+# step: The next requirement for pravin’s kubeconfig file is the cluster CA certificate.as we already have it in our existing kubeconfig file To retrieve it
+# kubectl config view -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' --raw | base64 --decode - > k8s-ca.crt
+# now, we can create pravins kubeconfig
+
+# step: Let’s set up the cluster configuration in pravin’s kubeconfig file using existing config file
+#  kubectl config set-cluster $(kubectl config view -o jsonpath='{.clusters[0].name}') --server=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}') --certificate-authority=k8s-ca.crt --kubeconfig=pravin-config --embed-certs
+
+# lets setup the user next which will import pravin’s key and cert into the file
+# kubectl config set-credentials pravin --client-certificate=pravin.crt --client-key=pravin.key --embed-certs --kubeconfig=pravin-config
+
+# The final kubeconfig requirement is to create a context
+# kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=dev --user=pravin --kubeconfig=pravin-config
+
+# kubectl create ns dev
+# kubectl label ns dev user=pravin env=dev
+
+# kubectl config use-context pravin --kubeconfig=pravin-config
+
+# kubectl version --kubeconfig=-config
+
+# export kubeconfig file to user terminal
+# export KUBECONFIG=/home/pravin/.kube/pravin-config  
+

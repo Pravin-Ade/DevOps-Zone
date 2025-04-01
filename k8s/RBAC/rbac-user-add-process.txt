@@ -1,0 +1,104 @@
+
+# add user 
+
+useradd -G wheel pravin
+passwd pravin
+
+# create a user account
+openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=devops"
+
+# cat pravin.csr | base64 | tr -d '\n' - replace with output at request location
+# create CertificateSigningRequest
+
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: pravin
+spec:
+  groups:
+  - system:authenticated
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJRVp6Q0NBazhDQVFBd0lqRVBNQTBHQTFVRUF3d0djSEpoZG1sdU1ROHdEUVlEVlFRS0RBWmtaWFp2Y0hNdwpnZ0lpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElDRHdBd2dnSUtBb0lDQVFDNVl2NkZyV1BWUWxhS2lQQW5GWEw5Ck1LTTNjTUdYY0V0TkVPWmJhb0hUWUVaNDBCYW0reXQwV0xxVWYwV2hNbFcybUNuejNZV1ZtL0tLVmtjcWRjUngKb1BndTJWM1V4SUlMYk9sRWUxZm52ckVyZitMUXY4UFc0VHA3aWdnQXM2YUEzNHo5TmZDd1F3Y2MwS3JPMkF0RQozQWFVVXNZKzkrMnlMY1prb2JQeUE4c3JEZU9oRnVGZHgzcXJqZHg2NENoS0pwUHFiOHAreWFqK25JZkVhMUpVCnAzTFBZc3RIY3R2eUlUWDJsNmtLdkhTQ254a3Rkc1l4by94WmtDNEVjRGY1ZEw3TktLSDFlVHB3aCtZczZCR2MKVjNPWThMMVNMRTdSdlJMdENyTHcxUVFhR3JKZkVjQ21RVlpPbTQzTWQxMEpXcUNLbFJvYjBvWklwTHFHSDdSbwpjNzNrRDlDWDdEZzVoUzlwT2pBRVlUMC9nMHNvdDVBd2RBbld2Q2tyTHhERW5oSko3RnozYW14dVVrWDhLMmE4CjlUL0xSMThZZ3lialpndDVhakc5bDJYSzFDNC8zcUU5YmVTdStxSXZmak9ERzZzRjdTR2N6L2hoTUNYaGJnTHMKNmhNRjhFY3VXcncvdlQ2UWd5NkwwQkdjVXIwV1BQSFJVSUo4T3pPVUdxQThzTEN3T25naWZQZnREdjJSaUJDWQpWdWlmTzRyL0xseVViR1NUU3JuUlNmRTJ2UlRPcS9xQjFvaitta1JKTjgzM2RDRkFpSU1OVnB6YnhueVlCdmdYCkJHWVNDOVd1YXZmZFVVd2dPWjhTUEl5S0o0elBqUkRRejU3empPd3JNYlI1OUE0QlhWNFY1cHZqOGZNZXIvY0cKVGxQM284Q3dIaXgzVXJFQU1hcCtTd0lEQVFBQm9BQXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnSUJBRjFJTlJQLwplVkFIdUwwMHB1S3lwZTlHUVRIYnRaVXN3VVFMb1Y0cnA3Q1lITUJRTVRTNFE4Vkl1YjRpMGExZWlMYUFSdjlyCmJ4dDd6ei9Oa212M1c2VGc1bStaUDVmaU9lWXExZ1FmM0ZjRGl5akd0eTMxRUZ5ZGVxcjREODVhL3NxazBaQmIKNjFlWTFKRTZKdjZFcmZoR0dabGM2USsrT3huc2NIQjZVd2Vsa3hXcTYzLzVOYk9EcTlLZzZoZEh0Qys4eE5UZQphZ1l5RjFkdGYybng3SWdaUm1KeXNQYUdZQ3oxKzN4dVZOb28wK1U1TEltNDZSUGlEMzBQUkpDU0dIQ0owZmN4CnBTc2FwbE5jSHc4bVlNWUZsaVdlblE4cExmejRieFQ4Ylc1OXpUR3pKajNOTy9nYTVwK1pidFJ5Ny83RnVxOTAKeVZNNjhDanNGWU5FWXZYVjJib0RiNzYwMlIyaUp1ZC94dHJBUDVYQ0FqOXR4TnBIUEtndUg0NmpFdHR3MWV0bQphR3U1V1BaLzFjbVdlTEhORDVORFV2RjZLS2cybTl6MFBsMjdJWG4rVXNiY3RZbmlGeWRQYnZlTU5udDA3UFp2CmZ5M3N4clZUdTdqb25FdSt2ZVg4RUlsNU5SUGxlN2g3dVdMdEI3UU9aYWRaV04wVzRXc0dCa2hiM0JmUHp2bloKM09QN2pnb3RnVG5Fay9tSkxDd3gyS3BSeWVsNW92VDZxM3Q1cDFBVnlKZTlBQnczd2JtWjJTaGRuK2JUZDYxagp1TjhWL0MrZytSeW41MkZqUVBoOTJwczR6UTNEUFlrRWx3R3RZeEVmdndsM01FWGN3NE10Wm9oVkZlNDZueVZkCk5idFhTMDRFRUsrbGhRUHJLT0dramFOSG45Q2RmQUx6YnU0VQotLS0tLUVORCBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0K
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth 
+
+>>> kubectl create -f k8s-csr.yaml
+>>> kubectl get csr
+>>> kubectl certificate approve pravin
+
+
+# To retrieve the certificate
+
+kubectl get csr pravin -o jsonpath='{.status.certificate}' | base64 --decode > pravin.crt
+
+
+# Let’s verify that we have a certificate for
+
+cat pravin.crt
+
+# The next requirement for pravin’s kubeconfig file is the cluster CA certificate.
+
+kubectl config view -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' --raw | base64 --decode - > k8s-ca.crt
+
+# Now we can start creating users’s kubeconfig file. Again, a kubeconfig file consists of a cluster configuration (Name, URL, CA cert), a user configuration (name, key, cert) and a context configuration
+
+kubectl config set-cluster $(kubectl config view -o jsonpath='{.clusters[0].name}') --server=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}') --certificate-authority=k8s-ca.crt --kubeconfig=pravin-config --embed-certs
+
+
+# see the pravins config file and its content
+
+cat pravin-config
+
+# Lets setup the user next which will import pravin's key and cert into the file.
+
+kubectl config set-credentials pravin --client-certificate=pravin.crt --client-key=pravin.key --embed-certs --kubeconfig=pravin-config
+
+# The final kubeconfig requirement is to create a context
+
+kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=dev --user=pravin --kubeconfig=pravin-config
+
+# kubectl create ns dev
+
+# kubectl label ns dev user=pravin env=devops
+
+# Finally, we’ll want to specify the context that pravin will use for his kubectl commands
+
+kubectl config use-context pravin --kubeconfig=pravin-config
+
+# let’s test pravin's kubeconfig by running the ‘kubectl version’
+
+kubectl version --kubeconfig=pravin-config
+
+
+# challenges
+
+kubectl get pods --kubeconfig=pravin-config
+
+forbiden error - 
+
+######### # note: usr pravin has complete freedom within the ‘dev’ namespace but nothing else outside of his namespace.
+
+# kubectl create rolebinding pravin-admin --namespace=dev --clusterrole=admin --user=pravin
+
+# kubectl run test-1 --image=nginx -n dev --kubeconfig=pravin-config
+
+# kubectl delete rolebinding pravin-admin
+
+
+
+------------------------------------------------------------- linux point of view
+useradd -m -d /home/<user> <userName>
+passwd
+
+
+
+export KUBECONFIG=/home/pravin/.kube/pravin-config
+
+vi ~/.profile
+add export KUBECONFIG=/home/pravin/.kube/pravin-config bottom of the file save and exit, log out and login again
+
+
+
+ 
+
+

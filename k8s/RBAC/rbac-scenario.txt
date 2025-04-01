@@ -1,0 +1,175 @@
+RBAC Scenarios
+
+
+--------------------------------------------------------------scenario one for vineetha ----------------------------------------------------------------
+
+vineetha can create, delete and watch the deployment and replicaset in comcast namespace.readonly permission on all other ns (she can get po on all other ns) and readonly access over the cluster as well.
+
+kubectl create clusterrolebinding vineetha-view --clusterrole view --user vineetha
+
+1. binded to the pod-reader role
+2. read only access on cluster
+
+role:
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+   namespace: comcast
+   name: vineetha-role
+rules:
+- apiGroups: ["", "extensions", "apps", “apps/v1”, “events.k8s.io/v1”]
+  resources: ["deployments", "replicasets", “daemonsets”, "services", “events”]
+  verbs: ["list", "get", "watch", "create", "update", "patch", "delete"]
+
+------------------- Bind a user to the newly created role -------------
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+   name: vineetha-role-binding
+   namespace: comcast
+subjects:
+- kind: User
+  name: vineetha
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: vineetha-role
+  apiGroup: ""
+
+add vineetha to ready only role as well so she can list the pod only in comcast namespace
+
+kubectl create -f deploy.yaml -n comcast
+kubectl get po -n comcast
+kubectl get deploy -n comcast
+kubectl delete deploy nginx-deployment -n comcast
+
+kubectl get rs -n comcast
+kubectl delete rs nginx-deployment-86dcfdf4c6 -n comcast
+
+### view permission on cluster scope
+
+Kubectl create clusterrolebinding Vineetha-view --clusterrole view --user Vineetha
+
+
+
+
+-------------------------------------------------------------scenario 2nd (pravin)-------------------------------------------------------------
+
+kubectl -n comcast create role pod-reader --verb list,watch,get --resource pods -oyaml > pod-reader.yaml
+
+
+
+-------------------------------------------------------------scenario 3rd k8s-admin-------------------------------------------------------------
+kubectl create clusterrolebinding k8s-admin --clusterrole admin --user k8s-admin
+
+
+-------------------------------------------------------------scenario 4rth Nipin-------------------------------------------------------------
+
+
+
+
+
+------------------------------------------------------------scenario 5th chinnu-------------------------------------------------------------
+
+
+kubectl rollout restart deployment coredns --namespace kube-system - restart without downtime.
+
+k -n kube-system logs coredns-5dd5756b68-hchqq | tail -5 | tail -2
+
+/var/log/pods/kube-system_coredns-5dd5756b68-s64z4_e1e146b7-c78b-4f58-bc12-b5bbefb7e2ca/coredns
+
+kubectl get endpointslices.discovery.k8s.io
+
+kubectl get svc -o yaml
+
+kubectl get all -A -l k8s-app=kube-dns
+
+kubectl -n kube-system describe cm coredns
+There is a service running in the container - but it does not seem to hold any data, probably due to not being able to connect to the api:
+
+coredns can't fetch data from the kubernetes api but i can't understand why,
+
+
+kubectl describe deploy coredns -n kube-system
+
+kubectl get events --namespace=kube-system
+
+
+kubectl -n kube-system get deployment coredns -o yaml
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+## view permission in all other namespaces (used default clusterrole view)
+
+k auth can-i update deployments --as vineetha -n applications | user don’t have pe
+
+k get ns # get all namespaces
+k -n app create rolebinding pravin-view --clusterrole view --user pravin
+
+k -n default create rolebinding pravin-view --clusterrole view --user pravin
+
+k -n kube-node-lease create rolebinding vineetha-view --clusterrole view --user vineetha
+
+k -n kube-public create rolebinding vineetha-view --clusterrole view --user vineetha
+
+###  just list Secret names, no content
+
+# NOT POSSIBLE: assigning "list" also allows user to read secret values
+k -n applications create role list-secrets --verb list --resource secrets
+
+k -n applications create rolebinding ------------
+
+### 
+
+# view in all namespaces but not kube-system
+k auth can-i list pods --as smoke -n default # YES
+k auth can-i list pods --as smoke -n applications # YES
+k auth can-i list pods --as smoke -n kube-public # YES
+k auth can-i list pods --as smoke -n kube-node-lease # YES
+k auth can-i list pods --as smoke -n kube-system # NO
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+
+kubectl get po -n app | no (need to apply )
+
+kubectl apply -f https://k8s.io/examples/controllers/nginx-deployment.yaml -n app
+
+kubectl get deploy -n app | yes
+kubectl get rs -n app | yes
+
+kubectl get events -n app | yes
+
+
+kubectl get ds -n app
+Error from server (Forbidden): daemonsets.apps is forbidden: User "pravin" cannot list resource "daemonsets" in API group "apps" in the namespace "app"
+
+
+kubectl apply -f https://k8s.io/examples/controllers/daemonset.yaml --namespace=kube-system
+
+Error from server (Forbidden): error when retrieving current configuration of:
+Resource: "apps/v1, Resource=daemonsets", GroupVersionKind: "apps/v1, Kind=DaemonSet"
+Name: "fluentd-elasticsearch", Namespace: "kube-system"
+from server for: "https://k8s.io/examples/controllers/daemonset.yaml": daemonsets.apps "fluentd-elasticsearch" is forbidden: User "pravin" cannot get resource "daemonsets" in API group "apps" in the namespace "kube-system"
+
+
+2nd test: view permissions in all ns
+
+after crate rolebinding and bind with vluster role view u can able to view pods and describe it as well.
+ 
+k -n app create rolebinding pravin-view --clusterrole view --user pravin
+
+kubectl get po -n app | yes
+kubectl describe po nginx-deployment-86dcfdf4c6-gqkhp -n app | yes
+
+
+# create cluter role and bind u can see nods and ns as well
+
+kubectl get no | yes
+
+kubectl get ns | yes
