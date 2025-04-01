@@ -1,0 +1,173 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo
+spec:
+  containers:
+    - image: alpine
+      name: alpine-container
+      args:
+       - /bin/sh
+       - -c
+       - sleep 1d
+      envFrom:
+        - configMapRef:
+            name: singlevalue-cmap
+
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-vol-demo
+spec:
+  containers:
+    - image: alpine
+      name: alpine-container
+      args:
+       - /bin/sh
+       - -c
+       - sleep 1d
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/appconfig
+  volumes:
+    - name: config-volume
+      configMap:
+        name: my-conf
+
+### kubectl create configmap example-cm --from-literal=welcome-msg="Hello! from config map"
+### kubectl get cm
+
+### kibectl create -f pod.yml
+
+### kubectl exec -it <pod> -- /bin/sh
+
+#--------------------------------------------------------------
+
+---
+apiVersion: v1
+kind: configMap
+metadata:
+  name: appconfigmap
+data:
+  name: pravin
+  author: ade
+  
+# whatever details requred by application we can mentioned as configmap
+# when you get inside of container you can get configmap volume i.e name: pravin and author: ade
+# kubectl exec -it configmaptest -- /bin/sh
+
+
+------------------------------------ learning 
+
+---
+# use to pass config data in form of key:val in k8s when pod is created
+# inject the config map into the pod so the k:v pair available as environment variable for 
+# application hosted inside container in the pod
+# >>> kubectl create configmap singlevalue-cmap --from-literal=cpu=4
+# kubectl api-resources | grep configmap
+# kubectl get cm
+# kubectl get configmap singlevalue-cmap -o yaml
+apiversion: v1
+kind: pod
+metadata:
+  name: configmaptest
+spec:
+  containers:
+    - name: alpine-container
+      image: alpine
+      args:
+        - /bin/bash
+        - -c 
+        - sleep 1d
+      envFrom:
+        - configMapRef:
+            # name: appconfigmap
+            name: my-conf
+            # name of configmap to be map this pod | mounting configmap to thid pod
+# kubectl apply -f configmapdemo.yml
+# kubectl exec -it configmaptest --/bin/sh // alpine image
+# loading as env variable
+
+
+#--------------------------------------------------------------------------- cm vol
+
+---
+apiVersion: v1
+kind: pod
+metadata:
+  name: config-vol-demo
+spec:
+  containers:
+    - name: alpine-container
+      image: alpine
+      args:
+        - /bin/sh
+        - -c
+        - sleep 1d
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/appconfig
+  volumes:
+    - name: config-volume
+      configMap:
+        name: appconfig
+# # loading as volume
+
+# # kubectl apply -f ./configmapvol.yml
+# # kubectl get pod
+# # kubectl get pod -n dev
+# # kubectl exec -it config-vol-demo -- /bin/sh
+# # df -sh | ls /etc/appconfig - you can run linux commands here bcz this is alpine image
+
+# echo "Pravin Ade" | base64
+
+# apiVersion: v1
+# kind: LimitRange
+# metadata: 
+#   name: cpu-memory-limit
+# spec:
+#   limits:
+#   - max:
+#       cpu: "1"
+#       memory: "200mi"
+#     min:
+#       cpu: "500m"
+#       memory: "100mi"
+
+
+# apiVersion: v1
+# kind: LimitRange
+# metadata:
+#   name: cpu-resource-constraint
+# spec:
+#   limits:
+#   - default: # this section defines default limits
+#       cpu: 500m
+#     defaultRequest: # this section defines default requests
+#       cpu: 500m
+#     max: # max and min define the limit range
+#       cpu: "1"
+#     min:
+#       cpu: 100m
+#     type: Container
+
+
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: example-no-conflict-with-limitrange-cpu
+# spec:
+#   containers:
+#   - name: demo
+#     image: registry.k8s.io/pause:2.0
+#     resources:
+#       requests:
+#         cpu: 700m
+#       limits:
+#         cpu: 700m
+      
+
+
