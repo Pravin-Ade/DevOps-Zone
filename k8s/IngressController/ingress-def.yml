@@ -1,0 +1,59 @@
+##  ingress - proxy server for Kubernetes services. 
+
+## Note: The one downside is that you need to configure an Ingress Controller for your cluster.
+
+## ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.
+## traffic routing is controlled by rules defined on the Ingress resource
+## Ingress can provide load balancing, SSL termination and name based virtual hosting
+## you have the choice of either using Nodeport r an ExternalIP addresses for your ingress 
+## so the people access externally.
+## SUSE RKE provides an ingress controller based on the NGINX ingress controller.
+
+
+### Work with an Ingress controller
+
+# when def ingress controller we can use couple of different ways to allow user to access ur application eternally.
+# one of this id NodePort 
+
+## ingress rules can be defined in separet manifest
+
+
+---
+apiVersion: networking.k8s.io
+kind: Ingress
+metadata:
+  name: test-ingress
+  annotations:
+    ingress.k8s.io/rewrite-target:/
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /one
+          backend:
+          # each service specified in this manifest will send trafic on that internal port 1234
+          # on which the application services will be listening. 
+            # serviceName: one-service
+            service:
+              name: one-service
+            # servicePort: 1234
+            port:
+              number: 1234
+        - path: /two
+          backend:
+            service:
+          # service name
+              name: two-service
+            port:
+            # service port number on which the app services listening
+              number: 1234
+        - path: /three
+          backend:
+            service:
+              name: three-service
+            Port: 
+              number: 1234
+
+
+### configure ingress for an application
+

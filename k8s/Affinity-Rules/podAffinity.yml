@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nod-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+  containers:
+  - name: node-affinity
+    image: nginx
+    imagePullPolicy: IfNotPresent
+
+# when you create pod with affinity rule but node does not have label, then pod is in pending state until and unless 
+# you add a label to the node. Once label added pod is in running state means scheduled.
+
