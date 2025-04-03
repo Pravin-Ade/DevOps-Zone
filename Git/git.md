@@ -9,3 +9,54 @@ The default state is **attached**, where any manipulation of the history is auto
 
 In a **detached** state, experimental changes can be made without impacting any existing branch, as HEAD is referencing the underlying commit directly and is not "attached" to a particular branch.
 
+## Git set upstream
+Git upstream is a link between the local repo and the remote one, and it enables you to synchronize the two repos.
+
+    ## set and push changes on new remote
+    git push --set-upstream <upstream URL> <upstream branch>
+
+    e.g. git push --set-upstream https://github.com/Pravin-Ade/DevOps-Zone.git main
+
+    ## set name
+    git remote add <upstream name> <upstream URL>
+
+    ## set on forked repo
+    git remote add upstream <upstream URL>
+    
+``git push -u origin main``
+
+1. **origin** refers to the remote repo's URL. origin, clone URL, or upstream can mean the same thing.
+
+2. If we clone the repo, git links local and remote URLs, so we don't go through the lengthy upstream setup process. That is why you use git push without manually configuring the upstream.
+
+3. -u is the short form of upstream. It points to the repo where we push or pull changes.
+
+## Another way to set upstream
+You can configure the upstream further by specifying the remote name using the command:
+
+    syntax: git remote add <upstream name> <upstream URL>
+
+    For example, we set our upstream name to the above URL like this:
+
+    git remote add origin https://github.com/Pravin-Ade/DevOps-Zone.git
+
+If you run into fatal: `remote origin already exists error`, use this command to remove the default origin
+
+    git remote rm origin
+
+check the changes
+
+    git remote -v
+
+### Display commit graph in git
+
+    git log --graph --decorate --oneline
+
+### How to get all the parent commit ID from commit history in Git?
+
+    git log --no-walk HEAD^@
+
+- Here, we used **^@** to get all parents and the **--no-walk** option to show only the parents and not their ancestors
+
+
+
