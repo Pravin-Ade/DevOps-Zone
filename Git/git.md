@@ -1,14 +1,3 @@
-## What is HEAD in Git?
-
-Where am I right now in the repository? It is a pointer to the currently checked-out branch or commit.
-
-### Attached & detached state
-HEAD pointer can be in either of two states: attached or detached. 
-
-The default state is **attached**, where any manipulation of the history is automatically recorded to the branch HEAD is currently referencing. 
-
-In a **detached** state, experimental changes can be made without impacting any existing branch, as HEAD is referencing the underlying commit directly and is not "attached" to a particular branch.
-
 ## Git set upstream
 Git upstream is a link between the local repo and the remote one, and it enables you to synchronize the two repos.
 
@@ -48,6 +37,19 @@ check the changes
 
     git remote -v
 
+---------------------------------------------
+
+## What is HEAD in Git?
+
+Where am I right now in the repository? It is a pointer to the currently checked-out branch or commit.
+
+### Attached & detached state
+HEAD pointer can be in either of two states: attached or detached. 
+
+The default state is **attached**, where any manipulation of the history is automatically recorded to the branch HEAD is currently referencing. 
+
+In a **detached** state, experimental changes can be made without impacting any existing branch, as HEAD is referencing the underlying commit directly and is not "attached" to a particular branch.
+
 ### Display commit graph in git
 
     git log --graph --decorate --oneline
@@ -56,7 +58,28 @@ check the changes
 
     git log --no-walk HEAD^@
 
-- Here, we used **^@** to get all parents and the **--no-walk** option to show only the parents and not their ancestors
+- Here, we used **^@** to get all parents and the **--no-walk** option to show only the parents and not their ancestors. 
 
+## How to get the parent details of any commit ID in git?
 
+To get the parent ID of individual commits in Git:
 
+    git log --pretty=%P -n 1 <commit id>
+
+-------------------------------------------------
+
+git stash
+git reset
+git 
+
+### Git remove untracked file and directories from git:
+
+    git clean -f
+    git clean -fd
+
+### unstage file from git
+
+    git rm --cached <file>
+    git restore --staged <file>
+    git reset <file>
+    
