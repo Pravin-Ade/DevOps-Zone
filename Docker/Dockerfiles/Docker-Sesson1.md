@@ -1,4 +1,4 @@
-## Docker playgrounds
+## Docker Playgrounds
 https://killercoda.com/login
 
 https://labs.play-with-docker.com/
@@ -15,6 +15,90 @@ We interact with the Docker Engine by using the Docker CLI.
 
 The Docker CLI and the Docker Engine communicate through an API.
 
+## Docker Components
+
+When we install docker, we get two major components
+- client: Docker commands are executed using the CLI.
+- server/engine: The Docker daemon (dockerd) is in charge of creating and managing containers.
+
+## Exploring Docker Commands
+
+[Docker cheat sheet](https://dockerlabs.collabnix.com/docker/cheatsheet/)
+
+Every container will have a unique id and name, if you donot set the name, docker engine will give random name
+
+    docker run -d nginx
+
+Yu will see the contair has random name and id, we'll get detals of the container by running below cmd.
+
+    docker ps
+
+
+## Images
+
+- docker images will have following naming pattern `<name>:<tag>`
+- *name* represents the image name of your application and *tag* represents the version
+
+In Docker hub we have 3 types of images:
+
+**Docker official images:**
+Generally these images have `<name>:<tag>`
+
+*Examples:*
+
+- nginx
+- alpine
+- openjdk
+
+**verified publisher images:**
+Generally these images have` <publisher>/<name>:<tag>`
+
+*Examples:*
+- jenkins/jenkins
+
+**Individual images:**
+
+Generally these images have `<username>/<name>:<tag>`
+
+*Examples:*
+
+- pravinade/image
+
+## How to build an Images:
+
+- To build a docker image first know the manual steps involved in bringing up your application.
+- Once we have steps, then we have two approaches in building images
+manual approach which involved creating a container & taking a snapshot (commit)
+automatable & repetitive approach referred as Dockerfile approach.
+
+### Manual approach with ubuntu
+
+    docker image pull ubuntu:24.04
+
+Now create a container with intractive mode
+
+    docker container run -it --name custom-ubuntu ubuntu:24.04 /bin/bash
+
+Now, update and install the java: run the commands
+
+    apt update
+    apt install openjdk-17-jdk -y
+
+    ## Verify java version
+
+    java --version
+
+Now exit from container and execute commit command to create an image from existing container. Creates a new image (effectively a copy of the container).
+
+    docker container commit custom-ubuntu jdk17:1.0
+
+    custom-ubuntu - name of the existing container
+    jdk17:1.0 - tag for the new image
+
+
+
+
+
 
 ## Our first Containers
 ### Hello World
@@ -25,8 +109,8 @@ The Docker CLI and the Docker Engine communicate through an API.
 
 ### A more useful container
 
-Let's run a more exciting container:
-    docker run -it ubuntu
+Let's run a more exciting container: Now create a container and login into it
+    docker run -it ubuntu /bin/bash
     root@04c0bb0ade:/#
 
 **-it is shorthand for -i -t.**
@@ -40,6 +124,7 @@ Try to run figlet in our container.
 
     root@04c0bb0a6c07:/# figlet hello
     bash: figlet: command not found
+
 Alright, we need to install it.
 
 
