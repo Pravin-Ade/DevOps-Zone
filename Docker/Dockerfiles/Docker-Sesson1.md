@@ -29,13 +29,13 @@ Every container will have a unique id and name, if you donot set the name, docke
 
     docker run -d nginx
 
-Yu will see the contair has random name and id, we'll get detals of the container by running below cmd.
+Yoy will see the contair has random name and id, we'll get detals of the container by running below cmd.
 
     docker ps
 
 
-## Images
-
+## Images and Tags
+- Images can have tags, tags define image versions.
 - docker images will have following naming pattern `<name>:<tag>`
 - *name* represents the image name of your application and *tag* represents the version
 
@@ -96,10 +96,6 @@ Now exit from container and execute commit command to create an image from exist
     jdk17:1.0 - tag for the new image
 
 
-
-
-
-
 ## Our first Containers
 ### Hello World
     docker run busybox echo hello world
@@ -119,13 +115,41 @@ Let's run a more exciting container: Now create a container and login into it
 
 **-t tells Docker that we want a pseudo-terminal.**
 
-### Do something in our container
-Try to run figlet in our container.
+### Containerizing applications
 
-    root@04c0bb0a6c07:/# figlet hello
-    bash: figlet: command not found
+#### Website in a container
 
-Alright, we need to install it.
+*Steps:*
+
+mkdir website
+cd website
+wget https://www.free-css.com/assets/files/free-css-templates/download/page296/little-fashion.zip
+unzip little-fashion.zip
+mv 2127_little_fashion/ fashion/
+
+*Webservers:*
+
+1. apache: default directoey /usr/local/apache2/htdocs/
+2. nginx: default directory /usr/share/nginx/html
+
+Create a file called as Dockerfile
+
+Now add the following
+
+    FROM nginx:1.27
+    COPY fashion/ /usr/share/nginx/html/fashion/
+
+Build Docker image
+
+    docker build -t myweb:1.0 .
+
+view the images
+
+    docker images
+
+Let's build the container with this image
+
+    docker container run -d --name myweb -P myweb:1.0
 
 
 
