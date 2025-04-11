@@ -147,11 +147,37 @@ view the images
 
     docker images
 
+**Q. What all happened when we build the image?**
+
+
 Let's build the container with this image
 
     docker container run -d --name myweb -P myweb:1.0
+    
+    docker container run -d --name myweb -p 80:80 myweb:1.0
 
+### Creating our image using Dockerfile
 
+A Dockerfile is a build recipe for a Docker image. It contains a series of instructions telling Docker 
+how an image is to be constructed.
+
+The docker build command builds an image from a Dockerfile.
+
+[Docker file reference!](https://docs.docker.com/reference/dockerfile/)
+
+### Necessary instructions
+
+FROM
+RUN
+ADD
+COPY
+CMD and ENTRYPOINT
+EXPOSE
+ENV
+WORKDIR
+USER
+
+[Refe!](https://docs.docker.com/reference/dockerfile/#from)
 
 ## Understanding the Docker Network Command
 The Docker Network command is the main command that would allow you to create, manage, and configure your Docker Network. 
