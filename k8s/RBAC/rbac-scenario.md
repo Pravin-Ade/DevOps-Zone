@@ -1,8 +1,5 @@
-RBAC Scenarios
-
-
---------------------------------------------------------------scenario one for pravin ----------------------------------------------------------------
-
+### RBAC Scenarios
+------------------------------------------------------------scenario one for pravin ---------------------------------------------------
 pravin can create, delete and watch the deployment and replicaset in comcast namespace.readonly permission on all other ns (she can get po on all other ns) and readonly access over the cluster as well.
 
 kubectl create clusterrolebinding pravin-view --clusterrole view --user pravin
