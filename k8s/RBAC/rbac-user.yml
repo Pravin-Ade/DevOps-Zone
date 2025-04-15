@@ -56,7 +56,7 @@ $ kubectl config set-credentials pravin --client-certificate=pravin.crt --client
 
 12. The final kubeconfig requirement is to create a contex
 
-$ kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=comcast --user=pravin --kubeconfig=pravin-config
+$ kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=dev --user=pravin --kubeconfig=pravin-config
 
 
 13.Specify the context that k8s-admin will use for his kubectl commands
@@ -75,19 +75,19 @@ export KUBECONFIG=/home/k8s-admin/.kube/k8s-admin-config
 
 ------------------------------------ EOF-------------------
 
-#kubectl -n comcast create role pravin-role --verb create,delete --resource pod,deployment,sts,replicasets,daemonsets,configmaps,apiservices,namespaces,no
+#kubectl -n dev create role pravin-role --verb create,delete --resource pod,deployment,sts,replicasets,daemonsets,configmaps,apiservices,namespaces,no
 
 
-kubectl get po -n comcast
+kubectl get po -n dev
 
 kubectl edit config view
 
 
 vineetha-role-binding | vineetha-role
-kubectl get rolebindings -n comcast
-kubectl get role -n comcast
+kubectl get rolebindings -n dev
+kubectl get role -n dev
 
-kubectl get deployment -n comcast
+kubectl get deployment -n dev
 
 worker-node3
 
