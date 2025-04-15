@@ -1,4 +1,5 @@
-
+### DevOps/SRE Engineers Interview QA:
+    
     0. connectivity issue in Linux.
     1. How to management console of physical servers and virtual servers.
     2. server downtime alert how can we start troubleshooting the situation.
@@ -48,7 +49,7 @@ https://docs.microsoft.com/en-us/learn/paths/github-administration-products/"	Ba
         Different Operation(Create/Clone/ commit/push/pull/rename/delete)
         Managing Branches
         Handling Conflicts
-Docker	"https://lex.infosysapps.com/en/app/toc/lex_12740935231076542000/overview
+
 https://www.tutorialspoint.com/docker/index.htm
 https://docs.docker.com"	Overview
         Installing Docker and  services
@@ -56,11 +57,13 @@ https://docs.docker.com"	Overview
         Working with Images and Containers
         Dokcer files and registries
         Storage and networking
-Kubernetes	https://lex.infosysapps.com/en/app/toc/lex_auth_013070458767417344523/overview	Introduction to Kubernetes
+
+	Introduction to Kubernetes
         Kubernetes Architecture and Basic Components
         different objects(namespaces/pods/ Labels and Selectors/ReplicaSet)
         Deployment,DaemonSet,Secrets
-Ansible	https://lex.infosysapps.com/en/app/toc/lex_auth_0131043992007966721195/overview	Introduction to Ansible
+
+	Introduction to Ansible
         Ansible Inventory
         Introduction to YAML
         Playbooks
@@ -74,10 +77,7 @@ https://lab.redhat.com/helpful-commands
 http://killercoda.com/		
         
 https://www.tutorialspoint.com/execute_bash_online.php		
-        
-Lex unix playground	
-
-https://lex.infosysapps.com/en/app/toc/lex_auth_012761083203747840518/overview		
+        	
         
 ### Interview Questions:
 
@@ -94,7 +94,7 @@ https://www.simplilearn.com/tutorials/git-tutorial/git-interview-questions
         
 **Kubernetes:**	https://www.edureka.co/blog/interview-questions/kubernetes-interview-questions/	
         
-Ansible	
+**Ansible**	
 
 https://www.interviewbit.com/ansible-interview-questions/	
 
@@ -131,7 +131,8 @@ Docker Questions
 24. Explain Implementation method of Continuous Integration(CI) and Continues Development (CD) in Docker?	
 25. What are the command to control Docker with Systemd?	
 26. How to use JSON instead of YAML compose file?	done
-27. What is the command you need to give to push the new image to Docker registry?	docker login privateReg, docker tag img, docker:1.x.x, docker push privateReg/sewalal/myrepo:1.x
+27. What is the command you need to give to push the new image to Docker registry? - 
+        docker login privateReg, docker tag img, docker:1.x.x, docker push privateReg/sewalal/myrepo:1.x
 28. How to include code with copy/add or volumes?	
 29. Explain the process of scaling your Docker containers	
 30. What is the method for creating a Docker container?	base img, dependencies, docker file
@@ -153,7 +154,6 @@ Docker Questions
     
 ### Kubernetes Questions	
     
-    
 1. What is a node in Kubernetes?	
 2. what process runs on Kubernetes Master Node? 	
 3. What is a pod in Kubernetes?	
@@ -169,4 +169,11 @@ Docker Questions
 13. Give examples of recommended security measures for Kubernetes.	
 14. What is Kube-proxy? 	
 15. How can you get a static IP for a Kubernetes load balancer? 	
-16. Adhoc commands to create deployment/pod/service,etc	kubectl create deployment blue --image=nginx --http-port:8080
+16. Adhoc commands to create deployment/pod/service,etc	
+
+        example: kubectl create deployment blue --image=nginx --http-port:8080
+
+17. How to connect two pods in different namespaces.
+18. Admission control, authentication and authorization?
+19. 
+
