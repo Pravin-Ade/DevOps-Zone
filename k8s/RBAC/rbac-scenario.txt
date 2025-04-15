@@ -1,11 +1,11 @@
 RBAC Scenarios
 
 
---------------------------------------------------------------scenario one for vineetha ----------------------------------------------------------------
+--------------------------------------------------------------scenario one for pravin ----------------------------------------------------------------
 
-vineetha can create, delete and watch the deployment and replicaset in comcast namespace.readonly permission on all other ns (she can get po on all other ns) and readonly access over the cluster as well.
+pravin can create, delete and watch the deployment and replicaset in comcast namespace.readonly permission on all other ns (she can get po on all other ns) and readonly access over the cluster as well.
 
-kubectl create clusterrolebinding vineetha-view --clusterrole view --user vineetha
+kubectl create clusterrolebinding pravin-view --clusterrole view --user pravin
 
 1. binded to the pod-reader role
 2. read only access on cluster
@@ -15,8 +15,8 @@ role:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-   namespace: comcast
-   name: vineetha-role
+   namespace: dev
+   name: pravin-role
 rules:
 - apiGroups: ["", "extensions", "apps", “apps/v1”, “events.k8s.io/v1”]
   resources: ["deployments", "replicasets", “daemonsets”, "services", “events”]
