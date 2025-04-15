@@ -28,29 +28,29 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
    name: vineetha-role-binding
-   namespace: comcast
+   namespace: dev
 subjects:
 - kind: User
-  name: vineetha
+  name: pravin
   apiGroup: ""
 roleRef:
   kind: Role
-  name: vineetha-role
+  name: pravin-role
   apiGroup: ""
 
-add vineetha to ready only role as well so she can list the pod only in comcast namespace
+add pravin to ready only role as well so she can list the pod only in dev namespace
 
-kubectl create -f deploy.yaml -n comcast
-kubectl get po -n comcast
-kubectl get deploy -n comcast
-kubectl delete deploy nginx-deployment -n comcast
+kubectl create -f deploy.yaml -n dev
+kubectl get po -n dev
+kubectl get deploy -n dev
+kubectl delete deploy nginx-deployment -n dev
 
-kubectl get rs -n comcast
-kubectl delete rs nginx-deployment-86dcfdf4c6 -n comcast
+kubectl get rs -n dev
+kubectl delete rs nginx-deployment-86dcfdf4c6 -n dev
 
 ### view permission on cluster scope
 
-Kubectl create clusterrolebinding Vineetha-view --clusterrole view --user Vineetha
+Kubectl create clusterrolebinding pravin-view --clusterrole view --user pravin
 
 
 
