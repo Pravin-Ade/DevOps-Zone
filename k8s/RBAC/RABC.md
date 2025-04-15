@@ -3,7 +3,7 @@
 Creating users in Kubernetes is typically done via Kubernetes' **RBAC** (Role-Based Access Control) system, which helps manage access to cluster resources. However, Kubernetes itself doesn't have a built-in user management system. Instead, users are typically managed outside Kubernetes (e.g., via an identity provider like Active Directory or using tools like `kubectl` or `kubeconfig` files).
 
 ### 1. Authentication with TLS Certificates
-When you set up a Kubernetes cluster (e.g., using `kubeadm`), authentication is handled through **TLS certificates**. Any user with a valid certificate signed by the cluster’s certificate authority (CA) is considered authenticated. The username is derived from the certificate’s **Common Name (CN)** field (e.g., “/CN=bob”).
+When you set up a Kubernetes cluster (e.g., using `kubeadm`), authentication is handled through **TLS certificates**. Any user with a valid certificate signed by the cluster’s certificate authority (CA) is considered authenticated. The username is derived from the certificate’s **Common Name (CN)** field (e.g., “/CN=pravin”).
 
 ### 2. Role-Based Access Control (RBAC)
 Once authenticated, Kubernetes uses **RBAC** to determine whether the user is allowed to perform certain actions on resources in the cluster.
@@ -28,7 +28,7 @@ To create a new user (e.g., "pravin"), follow these steps:
    Run the following command to generate a CSR for the user:
 
    ```bash
-   openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=Infosys"
+   openssl req -new -newkey rsa:4096 -nodes -keyout pravin.key -out pravin.csr -subj "/CN=pravin/O=ade"
 
 Now we have pravin.csr, we need to have it signed by the cluster CA. for that we create CertificateSigningRequest object.
 Now that we have the `pravin.csr` file, we need to have it signed by the cluster's **Certificate Authority (CA)**. To do this, we create a **CertificateSigningRequest (CSR)** object in Kubernetes.
@@ -94,7 +94,7 @@ We can see that the userand context list are empty. Let's set up the user next w
 
 Final kubeconfig requirement is to create a context.
 
-    kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=infosys --user=pravin --kubeconfig=pravin-config
+    kubectl config set-context pravin --cluster=$(kubectl config view -o jsonpath='{.clusters[0].name}') --namespace=dev --user=pravin --kubeconfig=pravin-config
 
 Finally, we will want to specify the context that pravin will use for his kubectl commands.
 
@@ -111,6 +111,6 @@ Now lets's go and list the running pods using pravin's kubeconfig
 
 **3. Assign Roles Within a Namespace**
 
-**scenario:** We need to give Bob a role that will give him complete freedom within the ‘bob’ namespace but nothing else outside of his namespace.
+**scenario:** We need to give Pravin a role that will give him complete freedom within the ‘dev’ namespace but nothing else outside of his namespace.
 
     kubectl create rolebinding pravin-admin --namespace=ns-pravin --clusterrole=admin --user=pravin
