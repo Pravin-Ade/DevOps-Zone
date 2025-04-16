@@ -96,4 +96,21 @@ Delete branch Remotely
     git push origin --delete <branch name>
 
 
-    
+## Accidentally committed and pushed code to feature branch    
+
+1. Identify the commit hash: use the git log command to find the commit hash 
+
+  git log 
+  git log --oneline
+
+2. Revert to the previous commit
+  
+  git reset --hard <commit-hash>
+
+3. Force push the changes to the remote branch
+
+  git push origin <branch-name> --force
+
+This will revert your branch to the previous state and update the remote branch accordingly.
+
+
