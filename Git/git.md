@@ -93,8 +93,15 @@ Delete branch locally
 
 Delete branch Remotely
 
-    git push origin --delete <branch name>
+    git push origin --delete <branch name
 
+### Note: What if current branch not set as upstream
+
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin <branch-name>
+    git push --set-upstream origin feature
+    
 
 ## Accidentally committed and pushed code to feature branch    
 
