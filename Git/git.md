@@ -83,7 +83,17 @@ git
     git restore --staged <file>
     git reset <file>
 
-## git rebase command
+## How to delete branches (locally or remotely)
+
+Delete branch locally
+
+    git branch -d <branch name>
+
+    if branch is note merged yet then use -D
+
+Delete branch Remotely
+
+    git push origin --delete <branch name>
 
 
     
