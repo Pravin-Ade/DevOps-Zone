@@ -102,5 +102,21 @@ To push the current branch and set the remote as upstream, use
     git push --set-upstream origin <branch-name>
     git push --set-upstream origin feature
     
+### Squash Git Commits
 
-    
+If you are working on a project and trying to implement a new feature, you might commit your code a few times to test things out. This lets you see how the code works or looks.
+
+Because of this, you might want to combine all those commits into a single commit. This process is called commit squashing.
+
+To see the commits
+
+    git log --oneline
+
+Tell the Git how far back you want to rebase.
+
+**Note:** Note that I have two branches main and new-feature. i want to squash all the commits in the new-feature branch into one commit.
+
+    git rebase -i HEAD~6
+
+Now, you just need to replace all those pick with squash or s.
+
