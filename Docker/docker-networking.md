@@ -30,7 +30,7 @@ Start both container: c0 and c1 in my case
 
     docker  run -dit --name c1 --net my-net-01 alpine sh
 
-Install iputilsn for ping inside the containers
+Install iputils for ping inside the containers
 
 alpine doesent come with ping by default, install on both container.
 
