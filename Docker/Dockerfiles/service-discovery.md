@@ -1,13 +1,3 @@
-## Understanding the Docker Network Command
-The Docker Network command is the main command that would allow you to create, manage, and configure your Docker Network. 
-
-## Docker overlay networks under the hood
-
-**Q. How does it work? let's look inside containers.**
-- docker exec containe-Name or id ip addr show
-
-- docker exec *containe-Name or id* ip -details link show dev eth0
-
 ## Docker networking
 
 ### The Container Network Mode
@@ -30,7 +20,7 @@ Start both container: c0 and c1 in my case
 
     docker  run -dit --name c1 --net my-net-01 alpine sh
 
-Install iputils for ping inside the containers
+Install iputilsn for ping inside the containers
 
 alpine doesent come with ping by default, install on both container.
 
@@ -48,7 +38,6 @@ Clean up
 
 
 Note: for image ubuntu: docker exec c0 apt update and docker exec c0 apt install -y iputils-ping
-
 
 
 
