@@ -150,6 +150,10 @@ If we want to get a shell into our container (instead of running figlet), we jus
 
 We want to be able to specify a different message on the command line, while retaining figlet and some default parameters.
 
+- if entrypoint exists in Docker file that will be default executable. whatever we write in CMD will become arguments to entrypoint
+- if entrypoint is not found then CMD will be executable
+- CMD can be overriden easily by passing additional commands post image name in docker run
+
 Adding ENTRYPOINT to our Dockerfile, our new dockerfile will look like this
 
     FROM ubuntu
@@ -202,3 +206,6 @@ CMD is great for images with multiple binaries.
 Example: docker run busybox ifconfig
 
 (It makes sense to indicate which program we want to run!)
+
+
+
