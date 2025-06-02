@@ -29,6 +29,10 @@ Different nodes may be going to different destinations. You wanna make sure your
 
 In Kubernetes, the scheduler decides which nodes the pods are placed on depending on certain criteria.
 
+Lets take an example:
+
+
+
 
 
 ### Q 4. How does k8s achieve self-healing through its control loop?
