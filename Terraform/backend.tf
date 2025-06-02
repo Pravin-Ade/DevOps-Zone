@@ -15,3 +15,15 @@ terraform {
 ### terrafom fmt
 ### terraform validate
 ### terraform apply
+
+
+terraform {
+    backend "s3" {
+        bucket = "terraform-statelock01"
+        key = "global/s3/terraform.tfstate"
+        region = "ap-south-1"
+        dynamodb_table = "tf-lock"
+        encrypt = true
+    }
+}
+
