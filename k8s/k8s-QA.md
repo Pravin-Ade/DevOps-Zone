@@ -17,7 +17,21 @@
 5.  On the selected node, the kubelet instructs the container runtime (containerd, CRI-O) to pull the image and run the container.
 6.  if a **Service** is defined, the **kube-proxy** set-up the networking rules so that traffic can reach these pods.
 
-### Q 3. How does k8s achieve self-healing through its control loop?
+### Q 3. Why do we need a scheduler?
+
+The scheduler is only responsible for deciding which pod goes on which node. It doesn't actually place the pod on the nodes. That's the job of the kubelet. The kubelet on the node, is who create the pod on the nodes. The schedule only decides which pod goes where.
+
+When there are many Nodes and many containers/pods, you wanna make sure that the right pod ends up on the right node.
+
+For example, there could be different sizes of nodes and pods. You wanna make sure the node has sufficient capacity to accommodate those containers/pods.
+
+Different nodes may be going to different destinations. You wanna make sure your containers/pods are placed on the right ships so they end up in the right destination.
+
+In Kubernetes, the scheduler decides which nodes the pods are placed on depending on certain criteria.
+
+
+
+### Q 4. How does k8s achieve self-healing through its control loop?
 
 for example, If a Pod craches or a Node fails, the kubelet detect the issue, and controller manager notices the mismatch between desired state and actual state.
 
