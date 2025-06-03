@@ -31,6 +31,17 @@ In Kubernetes, the scheduler decides which nodes the pods are placed on dependin
 
 Lets take an example:
 
+![alt text](pngs/schedule1.png)
+
+
+You may have pods with different resources requirement. you can have nodes in cluster with dedicated to certain application 
+
+**How does the Scheduler assign these pods?**
+
+while scheduler 
+
+
+
 
 
 
