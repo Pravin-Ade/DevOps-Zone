@@ -23,9 +23,7 @@ The scheduler is only responsible for deciding which pod goes on which node. It 
 
 When there are many Nodes and many containers/pods, you wanna make sure that the right pod ends up on the right node.
 
-For example, there could be different sizes of nodes and pods. You wanna make sure the node has sufficient capacity to accommodate those containers/pods.
-
-Different nodes may be going to different destinations. You wanna make sure your containers/pods are placed on the right ships so they end up in the right destination.
+For **example**, there could be different sizes of nodes and pods. You wanna make sure the node has sufficient capacity to accommodate those containers/pods.
 
 In Kubernetes, the scheduler decides which nodes the pods are placed on depending on certain criteria.
 
@@ -36,9 +34,22 @@ Lets take an example:
 
 You may have pods with different resources requirement. you can have nodes in cluster with dedicated to certain application 
 
+For **example**, let's take one of these pods, the big blue one. It has a set of CPU and memory requirements.
+The scheduler goes through two phases to identify the best node for the pod.
+
+In the first phase, the scheduler tries to filter out the nodes that do not fit the profile for this pod.
+
+For **example**, the nodes that do not have sufficient CPU and memory resources requested by the pod. So the first two small nodes are filtered out. So we are now left with the two nodes on which the pod can be placed. Now how does the scheduler pick one from the two? The scheduler ranks the nodes to identify the best fit for the pod. It uses a priority function to assign a score to the nodes on a scale of zero to 10.
+
+For **example**, the scheduler calculates the amount of resources that would be free on the nodes after placing the pod on them. In this case, the one on the right would have six CPUs free if the pod was placed on it, which is four more than the other one. So it gets a better rank, and so it wins.
+
+So that's how a scheduler works at a high level.
+
 **How does the Scheduler assign these pods?**
 
-while scheduler 
+The scheduler looks at each pod and tries to find the best node for it.
+
+
 
 
 
