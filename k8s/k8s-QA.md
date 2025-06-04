@@ -45,17 +45,6 @@ For **example**, the scheduler calculates the amount of resources that would be 
 
 So that's how a scheduler works at a high level.
 
-**How does the Scheduler assign these pods?**
-
-The scheduler looks at each pod and tries to find the best node for it.
-
-
-
-
-
-
-
-
 
 ### Q 4. How does k8s achieve self-healing through its control loop?
 
