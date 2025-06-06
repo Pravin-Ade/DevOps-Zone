@@ -4,7 +4,7 @@ In **Kubernetes**, taints and tolerations are powerful tools that control which 
 and how you can restrict what pods are placed on what nodes.
 
 ### What Are Taints and Tolerations?
-**Taints:**Taint is kind of labeling that are applied to nodes and allow a node to repel a set of pods.
+**Taints:** Taint is kind of labeling that are applied to nodes and allow a node to repel a set of pods.
 
 **Tolerations:** are applied to pods and allow (but do not require) the pods to be scheduled on nodes with matching taints. ou apply taints to a node through the node specification (NodeSpec).
 
