@@ -1,4 +1,4 @@
-## USER AND GROUP ADMINISTRATION 
+## PART-I - USER AND GROUP ADMINISTRATION 
 
 In linux user is one who use the system, ther can be at least one or more than one user in linux at a time. Users on a system are identified by username and userId.
 - Every user is assigned a unique User ID number (UID); UID 0 identifies root
@@ -109,10 +109,92 @@ options are:
   - Passwoed expiration warnings: 2 days before password expires
   - Password inactive [-1] 1 one day later the account will be locked, after password expiry.
   - Account expiration date: 2025-07-25 (July 25th 2025)
+
+  ![alt text](../k8s/pngs/user-add3.jpg)
  
-- **Method second:** if you want to change a perticular field of password aging policy.
-- **Synatax:** chage option value userName
-- The options
 
+The second method is for, if you want to change a particular field of password aging policy
 
+- **chage option value username**
+  - The options which can be used are as follows
+  - -m for Min password age
+  - -M for Max password age
+  - -d for last time the password is changed. ( Note: if given d 0, it will force the user to change password at next login) \
+  - -W Password expiration warnings
+  - -I Password inactive [-1 means inactive].
+  - -E A/C expiration date
+
+Let’s see how to change only the account expiration date
+
+**command**: chage -E 2025-07-25 user1
+
+### Forcing a user to change the password at next login
+
+Sometimes it is required to force the users to change their password at next login. This can \
+be done using following syntax
+- chage –d 0 username, (where 0 = zero days since last password change)
+- chage –d 0 myuser
+
+## PART-II GROUP ADMINISTRATION
+
+### groups
+- Users are assigned to groups with unique group ID numbers (the GID)
+- The group name and GID are stored in **/etc/group**
+- Each user is given their own private group
+- They can also be added to their groups to gain additional access
+- All users in a group can share files that belong to the group
+
+Each user is a member of at least one group, called a primary group. In addition, a user can be a member of an unlimited number of secondary groups.
+
+A user’s primary group is defined in the **/etc/passwd** file and Secondary groups are
+defined in the **/etc/group** file.
+
+### Creating a Group with default options:
+
+**Syntax:** groupadd [GroupName]
+
+### Creating a group with user specified group id (GID)
+**Syntax:** groupadd [option] [GroupName]
+
+groupadd -g 1050 mygrp2\
+Verify it in **/etc/group**
+
+### Modifying the properties of the group
+**Syntax:** groupmod [option] [arguments] [GroupName]
+
+The options are:
+- *-g* - to change the group id
+- *-o* - to override the previous assigned id, if it matches with the new one.
+- *-n* - to change the group name
+
+### Changing the GID of the group
+groupmod –g 1100 mygrp
+
+### Changing the name of the group
+**Syntax:** groupmod –n [NewGroupName] [existingGroupName]
+
+### Adding and Removing Members to a Group
+- Adding single or multiple users to the group with various attributes
+- gpasswd [option] [arguments] [GroupName]
+
+Options:
+- -M For Adding Multiple users to a group
+- -a for Adding a single user to a group
+- -A for Adding a group Administrator
+- -d removing a user from a group
+
+**Syntax:** gpasswd –M [user],[user],[user] [group] \
+gpasswd –M u1,u2,u3 mygroup
+
+Adding single user to the group\
+**Syntax:** gpasswd –a u4 mygroup
+
+### Making a user as an administrator of the group
+gpasswd –A u1 mygroup (verify it in /etc/gshadow)
+
+### Removing a user from the group
+**Syntax:** gpasswd –d u2 mygroup
+
+### Removing a group
+groupdel [groupName]
 
