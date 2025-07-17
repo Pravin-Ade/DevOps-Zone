@@ -24,6 +24,7 @@ e.g. By default **passwd** command is having suid,  so all users can run that co
 When a directory is created and its group is set to some group. Now if SGID is applied to it, and the group member creates files and directory inside it, then it will get the same group rather than getting user’s primary group 
 
 e.g. let's see it practically.
+
 ![alt text](../k8s/pngs/suid-2.jpg)
 
 Login as other user, access the directory, create some files and check the group it is getting. ( It will be getting the logged in user’s group)
