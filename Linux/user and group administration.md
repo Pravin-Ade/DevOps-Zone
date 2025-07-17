@@ -58,14 +58,19 @@ options are:
 - **useradd user1**
 - check user details: cat /etc/passwd, id username
 
+![alt text](../k8s/pngs/user-add1.jpg)
+
 ### Let's create a user with customized attribute
 
 - create user with following attribute
--  Name = pravin
+-  Name = user1
 -  uid = 1001
 -  comment = admin
 -  shell = /bin/sh
--  command: useradd -u 1001 -c admin -s /bin/sh pravin
+-  command: useradd -u 1011 -c admin -s /bin/sh user1
+![alt text](../k8s/pngs/user-add2.jpg)
+
+
 
 ### Assigning password to the user
 - as root user we can assign any password to any user
