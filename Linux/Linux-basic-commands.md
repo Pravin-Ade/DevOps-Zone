@@ -57,3 +57,24 @@ Redirecting to multiple targets (tee)
 
 Stores *STDOUT* of `ls` in listing then `pipes` to word count (wc)
 
+### Find
+Find command is used to search for files and directories. \
+**syntax:** find [path] [options] [expression]
+
+**path:** Where to start searching (e.g., /, .) \
+**options:** How to search (name, type, size, etc.) \
+**expression:** What to do (print, delete, exec)
+
+1. **Find only directories** - *find /etc/apt -type d*
+2. **Find only files** - *find /etc/apt -type f*
+3. **Find file by name** - *find / -name new.txt*
+4. **Find Directory by name** - *find /etc/apt/ -type d -name tru*.d
+5. **Find file based on size** - *find /var -type d -size 1M*
+6. **Find directory that are greater than 100MB in the / directory** - find / -type d -size +100M
+7. **find file by size range** - find / -type f -size +1k -size -10k
+8. **Find files by permission** - find / -type f -perm 664
+9. **Find files by modification time** - find ~/ -type -f -mtime 5
+10. **Find hidden file:** - find . -type -f -name '.*'
+11. **Find text in files** - find . -name "*.txt" -exec grep 'book' {} \; or find . -name "*.txt" -exec grep -H "book" {} \;
+12. **find and Delete the Matching Files** - find . -name "*.txt" -exec grep -l "chai" {} \; -exec rm -rf {} \;
+
