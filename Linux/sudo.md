@@ -96,10 +96,34 @@ To allow run all command, The syntax we have already seen, but allow him run com
 
 ![alt text](../k8s/pngs/linux6.png)
 
+### Restrict user **u1** to run only two root commands.
+
+- let's give **u1** user to run only **fdisk** and **parted** command access. \
+- First check the complete path of those command by using **which fdisk** and **which parted**
+- let's assign both above paths in sudoers file.
+- visudo
+
+Add to bottom of the file.
+
+                u1    ALL=(ALL) /sbin/fdisk, /sbin/parted
+
+### Allow a group **mygroup** to run network related commands as sudo user.
+
+- To allow a group run only network commands, 
+
+### Allowing user all commands except few commands
+
+- Most of the time it might be require to block few commands from users, even though all commands have been granted. It is an important aspect as per security view.
+- Let's assume we want to block **visudo** and **su** commands.
+- Find out the path of those two command needs the be block. (which visudo and which su)
+
+
+- Now, allow all the commands to user2 and block the above two by using an **! Exclaimation mark**.
 
 
 
 
+# Networking
+Study about - IP, Route, route table, subnet, CIDR, gateway
 
-
-
+https://study-ccna.com/
