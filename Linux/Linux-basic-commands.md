@@ -78,3 +78,31 @@ Find command is used to search for files and directories. \
 11. **Find text in files** - find . -name "*.txt" -exec grep 'book' {} \; or find . -name "*.txt" -exec grep -H "book" {} \;
 12. **find and Delete the Matching Files** - find . -name "*.txt" -exec grep -l "chai" {} \; -exec rm -rf {} \;
 
+
+### SED
+1. Update specific line to the file
+   ```
+   sed -i '2s/.*/This is change/' file.txt
+   ```
+2. Replace word in file
+   ```
+   sed -i 's/Ubuntu/Linux/g' greet.txt
+   ```
+3. Add line top of the file
+   ```
+   sed -i '1iThis is first line added by sed command' greet.txt
+   ```
+4. How do you check if a file exist and then write to it only if it exist?
+   ```
+   if [ -f greet.txt ]; then
+     echo "Hello! This line has been added by if condition" > greet.txt
+   fi
+   ```
+
+### tee
+1. read file, process it and save it
+   ```
+   cat /etc/passwd | tee file.txt
+   ```
+   
+
