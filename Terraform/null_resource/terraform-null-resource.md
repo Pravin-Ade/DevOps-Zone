@@ -2,11 +2,11 @@
 
 As in the name suggest a prefix null which means this resource will not exist on your cloud Infrastructure.
 
-The reason is there is no there is no terraform state associate with it.
+The reason is there is no terraform state associate with it.
 
 It does not have state which mean it will execute as soon as you run **terraform apply --auto-approve** command but no state will be saved. 
 
-### Terraform null_resource can be used in the following scenarios:
+### Terraform _null_resource_ can be used in the following scenarios:
 
 1. Run Shell commands
 2. You can use it along with local provisioner and remote provisioner
