@@ -13,3 +13,11 @@ intractive process. Intractive process can be classified into foreground and bac
 
 A __background__ process is not intracting with the user and can be in one of two states - pause or running.
 
+### System Process or Daemon
+The process that run on the system and provide service but does not intract with console. Example: samba, apache etc.
+
+### Automatic Process
+
+### Parent and Child Process
+- The process   
+
