@@ -104,5 +104,11 @@ Find command is used to search for files and directories. \
    ```
    cat /etc/passwd | tee file.txt
    ```
-   
+### AWK
+
+```
+awk '//' fileName
+awk '{print}'
+awk '{print $0}' fileName
+```
 
