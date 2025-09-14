@@ -111,6 +111,103 @@ Q. Another way to rename docker container
 
     docker rename OldName_app NewNameApp
     docker ps 
+**Q. CMD and ENTRYPOINT**
+
+These commands allow us to set the default command to run in a container
+
+Defining a default command
+
+When people run our container, we want to greet them with a nice hello message, and using a custom font.
+
+        FROM ubuntu
+        RUN apt-get update
+        RUN ["apt-get", "install", "figlet"]
+        CMD figlet -f script hello
+
+        docker build -t figlet .
+        docker run figlet | output - hello
 
 
-    
+**CMD** defines a default command to run when none is given.
+
+It can appear at any point in the file.
+
+Each CMD will replace and override the previous one.
+
+As a result, while you can have multiple CMD lines, it is useless.
+
+### Overriding CMD
+
+If we want to get a shell into our container (instead of running figlet), we just have to specify a different program to run:
+
+    docker run figlet figlet Hello
+
+- we specified figlet hello
+- it replaced the value of CMD
+
+
+### Using ENTRYPOINT
+
+We want to be able to specify a different message on the command line, while retaining figlet and some default parameters.
+
+- if entrypoint exists in Docker file that will be default executable. whatever we write in CMD will become arguments to entrypoint
+- if entrypoint is not found then CMD will be executable
+- CMD can be overriden easily by passing additional commands post image name in docker run
+- Command which gets executed when the docker container is created from image.
+- CMD acts as argument to the ENTRYPOINT
+
+Adding ENTRYPOINT to our Dockerfile, our new dockerfile will look like this
+
+    FROM ubuntu
+    RUN apt-get update
+    RUN ["apt-get", "install", "figlet"]
+    ENTRYPOINT ["figlet", "-f", "script"]
+
+ENTRYPOINT defines a base command (and its parameters) for the container.
+
+he command line arguments are appended to those parameters.
+
+Like CMD, ENTRYPOINT can appear anywhere, and replaces the previous value.
+
+### Using CMD and ENTRYPOINT together
+
+What if we want to define a default message for our container?
+
+Then we will use ENTRYPOINT and CMD together.
+
+ENTRYPOINT will define the base command for our container.
+
+CMD will define the default parameter(s) for this command.
+
+They both have to use JSON syntax.
+
+    FROM ubuntu
+    RUN apt-get update
+    RUN ["apt-get", "install", "figlet"]
+    ENTRYPOINT ["figlet", "-f", "script"]
+    CMD ["hello world"]
+
+ENTRYPOINT defines a base command (and its parameters) for the container.
+
+If we don't specify extra command-line arguments when starting the container, the value of CMD is appended.
+
+Otherwise, our extra command-line arguments are used instead of CMD.
+
+### Overriding ENTRYPOINT
+
+
+### When to use ENTRYPOINT vs CMD
+ENTRYPOINT is great for "containerized binaries".
+
+Example: docker run consul --help
+
+(Pretend that the docker run part isn't there!)
+
+CMD is great for images with multiple binaries.
+
+Example: docker run busybox ifconfig
+
+(It makes sense to indicate which program we want to run!)
+
+
+
