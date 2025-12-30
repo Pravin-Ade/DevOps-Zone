@@ -169,11 +169,17 @@ Docker Questions
 13. Give examples of recommended security measures for Kubernetes.	
 14. What is Kube-proxy? 	
 15. How can you get a static IP for a Kubernetes load balancer? 	
-16. Adhoc commands to create deployment/pod/service,etc	
+16. Adhoc commands to create deployment/pod/service,etc
+
+
+### Master Node QA
+
+1. What happen if one of the leader master node failed?
+2. 
 
         example: kubectl create deployment blue --image=nginx --http-port:8080
 
-17. How to connect two pods in different namespaces.
-18. Admission control, authentication and authorization?
-19. 
+18. How to connect two pods in different namespaces.
+19. Admission control, authentication and authorization?
+20. 
 
