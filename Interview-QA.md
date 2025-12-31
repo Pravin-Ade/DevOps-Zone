@@ -171,15 +171,28 @@ Docker Questions
 15. How can you get a static IP for a Kubernetes load balancer? 	
 16. Adhoc commands to create deployment/pod/service,etc
 
+        example: kubectl create deployment blue --image=nginx --http-port:8080
+
+17. How to connect two pods in different namespaces.
+18. Admission control, authentication and authorization?
 
 ### Master Node QA
 
 1. What happen if one of the leader master node failed?
-2. 
+2. How is an NLB used to balance traffic among Kubernetes master nodes?”
 
-        example: kubectl create deployment blue --image=nginx --http-port:8080
-
-18. How to connect two pods in different namespaces.
-19. Admission control, authentication and authorization?
-20. 
+1. What are the different types of error/troubleshooting you faced/did in cluster.
+2. How Big is your k8 cluster, how it is configured in your environment 
+	How many master nodes (ubuntu, cpu cores, 
+	How many worker nodes
+	Etcd High available how did you set it up 
+3. Master node went down, how did you fixed it. 
+4. How does Kubernetes autoscaling work. (POD and Node auto scale)
+5. What is the steps you performed, when you got issues Resource constraints Pod deployments.
+	How did you scaled a new nodes to allocate the new pods  
+5. What are statefulsets, what is the use cases of it, where are we using it 
+6. What is the deployment strategy we are using
+  7. How storage classes in K8 configured
+1. Can you recommend How do you secure a Kubernetes cluster?, what steps you follow 
+2. Few  nodes on cluster are not responding, what are the actions you follow to fix. How do you recovered it   
 
