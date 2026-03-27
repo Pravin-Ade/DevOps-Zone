@@ -194,5 +194,30 @@ Docker Questions
 6. What is the deployment strategy we are using
   7. How storage classes in K8 configured
 1. Can you recommend How do you secure a Kubernetes cluster?, what steps you follow 
-2. Few  nodes on cluster are not responding, what are the actions you follow to fix. How do you recovered it   
+2. Few  nodes on cluster are not responding, what are the actions you follow to fix. How do you recovered it
+
+
+
+ Micro services:
+
+ Two micro services need to communicate. what are your options? how do you decide?
+
+ 1. Syncronus communication (HTTP /REST / gRPC)
+    - service A calls service B and wait for a response
+    - use when imediate response is required
+    - Example: Join service (MJS) calls to MBS (meeting buisness service) to join call.
+    - production lession: simple and easy to debug, but failure in MBS = failure in MJS.
+2. Asyncronous communication ( essage queue/ kafka / rabbitMQ )
+   - service publishes event --> service MBS consumes later
+   - use when eventual consistency is okay
+   - example: MJS service publishes "meeting join service created" MBS service consumes
+   - Production lesson: deouple services, improves reliability, handle spikes gradually.
+  
+3. Deciding factors:
+   - latency sensitivity --> sync
+   - failure tolerance / decoupling -> async
+   - traffic volume / burst --? async with buffering
+   - data consistency requirement --> sync or eventual consistency patterns.
+  
+
 
