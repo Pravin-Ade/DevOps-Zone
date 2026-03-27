@@ -198,9 +198,9 @@ Docker Questions
 
 
 
- Micro services:
+ ## nMicro services:
 
- Two micro services need to communicate. what are your options? how do you decide?
+ Q 1. Two micro services need to communicate. what are your options? how do you decide?
 
  1. Syncronus communication (HTTP /REST / gRPC)
     - service A calls service B and wait for a response
@@ -218,6 +218,43 @@ Docker Questions
    - failure tolerance / decoupling -> async
    - traffic volume / burst --? async with buffering
    - data consistency requirement --> sync or eventual consistency patterns.
+  
+Q 2. App is slowing due to frequent GC pauses. Which GC will you choose for better performance? Why?
+
+What is garbage collection (GC)?
+	- Automatic memory management in JVM
+	- Removes unused objects from heap
+	- fresh for new objects.
+Production lesson: GC prevents memory leak but can introduce pauses.
+
+1. Understand the problems
+    1. Frequent stop-the-world- pauses
+    2. High latency during GC
+    3. Throughput drops under load
+    4. Production lesson: GC pauses directly impact user experience.
+2. Default GC (g1 gc)
+    1. Balanced for most applications
+    2. Split heap Into regions
+    3. Predictable pause time
+    4. Production lesson: G1 is the safe default for most prod systems 
+3. Low latency requirement —> ZGC / Shenandoah 
+    1. Very low pause times (ms)
+    2. Concurrent GC (run along side applications)
+    3. Suitable for large heap systems
+    4. Production lesson: choose ZGC when latency matters more than throughput.
+4. High throughput requirement —> parallel GC
+    1. Max throughput
+    2. Uses multiple threads
+    3. Longer pause times
+5. How to choose 
+    1. Low latency API’s —> ZGC / Shenandoah 
+    2. Balanced systems —> G1 GC
+    3. Batch processing —> parallel GC
+    4. Production lesson: there is no best GC — only best for your use case.
+6. Real production logs
+    1. Monitor GC logs
+    2. Tune heap size properly
+    3. Reduce object creation
   
 
 
