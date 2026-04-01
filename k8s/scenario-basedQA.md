@@ -7,4 +7,8 @@ Root Cause🥇 New version of CDP, seems new version dosn't work, rolled backed.
 - Pod was assigned to the worker Node , no more space for ther pod.
 Resolution: Terminate the pipeline and retry | cordon the broken node, so, pods will be reached to the other healthy nodes.
 
+## Q 3. Insufficient resource issue, pods are in pending state waiting for nodes.
 
+
+## Q 4. Single POD is having high CPU usage, what we you do?
+- kill the pods.
