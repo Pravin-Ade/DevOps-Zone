@@ -169,11 +169,92 @@ Docker Questions
 13. Give examples of recommended security measures for Kubernetes.	
 14. What is Kube-proxy? 	
 15. How can you get a static IP for a Kubernetes load balancer? 	
-16. Adhoc commands to create deployment/pod/service,etc	
+16. Adhoc commands to create deployment/pod/service,etc
 
         example: kubectl create deployment blue --image=nginx --http-port:8080
 
 17. How to connect two pods in different namespaces.
 18. Admission control, authentication and authorization?
-19. 
+
+### Master Node QA
+
+1. What happen if one of the leader master node failed?
+2. How is an NLB used to balance traffic among Kubernetes master nodes?”
+
+1. What are the different types of error/troubleshooting you faced/did in cluster.
+2. How Big is your k8 cluster, how it is configured in your environment 
+	How many master nodes (ubuntu, cpu cores, 
+	How many worker nodes
+	Etcd High available how did you set it up 
+3. Master node went down, how did you fixed it. 
+4. How does Kubernetes autoscaling work. (POD and Node auto scale)
+5. What is the steps you performed, when you got issues Resource constraints Pod deployments.
+	How did you scaled a new nodes to allocate the new pods  
+5. What are statefulsets, what is the use cases of it, where are we using it 
+6. What is the deployment strategy we are using
+  7. How storage classes in K8 configured
+1. Can you recommend How do you secure a Kubernetes cluster?, what steps you follow 
+2. Few  nodes on cluster are not responding, what are the actions you follow to fix. How do you recovered it
+
+
+
+ ## nMicro services:
+
+ Q 1. Two micro services need to communicate. what are your options? how do you decide?
+
+ 1. Syncronus communication (HTTP /REST / gRPC)
+    - service A calls service B and wait for a response
+    - use when imediate response is required
+    - Example: Join service (MJS) calls to MBS (meeting buisness service) to join call.
+    - production lession: simple and easy to debug, but failure in MBS = failure in MJS.
+2. Asyncronous communication ( essage queue/ kafka / rabbitMQ )
+   - service publishes event --> service MBS consumes later
+   - use when eventual consistency is okay
+   - example: MJS service publishes "meeting join service created" MBS service consumes
+   - Production lesson: deouple services, improves reliability, handle spikes gradually.
+  
+3. Deciding factors:
+   - latency sensitivity --> sync
+   - failure tolerance / decoupling -> async
+   - traffic volume / burst --? async with buffering
+   - data consistency requirement --> sync or eventual consistency patterns.
+  
+Q 2. App is slowing due to frequent GC pauses. Which GC will you choose for better performance? Why?
+
+What is garbage collection (GC)?
+	- Automatic memory management in JVM
+	- Removes unused objects from heap
+	- fresh for new objects.
+Production lesson: GC prevents memory leak but can introduce pauses.
+
+1. Understand the problems
+    1. Frequent stop-the-world- pauses
+    2. High latency during GC
+    3. Throughput drops under load
+    4. Production lesson: GC pauses directly impact user experience.
+2. Default GC (g1 gc)
+    1. Balanced for most applications
+    2. Split heap Into regions
+    3. Predictable pause time
+    4. Production lesson: G1 is the safe default for most prod systems 
+3. Low latency requirement —> ZGC / Shenandoah 
+    1. Very low pause times (ms)
+    2. Concurrent GC (run along side applications)
+    3. Suitable for large heap systems
+    4. Production lesson: choose ZGC when latency matters more than throughput.
+4. High throughput requirement —> parallel GC
+    1. Max throughput
+    2. Uses multiple threads
+    3. Longer pause times
+5. How to choose 
+    1. Low latency API’s —> ZGC / Shenandoah 
+    2. Balanced systems —> G1 GC
+    3. Batch processing —> parallel GC
+    4. Production lesson: there is no best GC — only best for your use case.
+6. Real production logs
+    1. Monitor GC logs
+    2. Tune heap size properly
+    3. Reduce object creation
+  
+
 

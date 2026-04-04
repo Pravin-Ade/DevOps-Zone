@@ -31,7 +31,5 @@ look for the line that specifies the port (port 22) and change it to your desire
 
 **Verify connectivity:** Test the new port by connecting to it.
 
-## Port forwarding
-
 
 

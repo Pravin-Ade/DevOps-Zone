@@ -1,0 +1,61 @@
+# We can access my application running inside kubernetes from outside the cluster, using a node's IP.
+# NodePort exposes your app on a static port on every worker node
+# port range: 30000-32767
+# we can access it like: http://<NodeIP>:<NodePort>
+
+# scenario
+  # A web app (nginx) running in pods
+  # App listens on port 80
+  # Cluster has multiple nodes
+  # You want to access it from your browser / laptop
+
+### Deployment
+kind: Deployment
+metadata:
+  labels:
+    app: web-app
+  name: web-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app # A Service routes traffic only to Pods whose labels match the Service’s selector under spec.selector.
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx
+        ports:
+        - containerPort: 80
+        # kubectl apply -f deploy.yml
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-nodeport
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30007
+  selector:
+    app: web-app
+  type: NodePort
+  # kubectl apply -f nodeport.yml
+  # kubectl get svc web-nodeport
+
+
+# get Node IP
+# k get no -o wide: e.g. 192.168.1.0
+# Access the application: http://192.168.1.0:30007 you should see the Nginx web page
+
+# Traffic flow: browser/local --> NodeIP --> KubeProxy --> Service (ClusterIp) --> one of the end pods (Nginx)
+
+  
+
+
+

@@ -1,0 +1,83 @@
+# Resource Quotas in Kubernetes allow administrators to set constraints on the total resource usage per namespace.
+# By using Resource Quotas, you can limit the number of resources such as Pods, CPU, and memory 
+# that can be consumed within a namespace. 
+# This helps in preventing a single namespace from monopolizing cluster resources.
+
+# Use cases
+
+# Ability to enumerate resource usage limits per namespace.
+# Ability to monitor resource usage for tracked resources.
+# Ability to reject resource usage exceeding hard quotas.
+
+# Apply resoureceQuota, define resoureceQuota object and apply it to the desired namespaces.
+
+# https://www.youtube.com/watch?v=xacRU3J-310&list=PLMj5OfHGyNU9TuhIiS2Kl2DXJeGXiKr1K&index=14
+
+# multi master k8s cluster
+
+
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: rq-demo
+  namespace: dev-team-rq
+spec:
+  hard:
+    limits.cpu: "4"
+    limits.memory: "16Mi"
+    requests.cpu: "4"
+    requests.memory: "16Mi"
+    pods: "10"
+
+# Q. How to restrict user permission to only list pods in k8s.
+
+
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-restriction
+  labels:
+    owner: pravin
+    permission: pods-restrictions
+  namespace: dev
+rules:
+  - apiGroups: [""]
+    resources: ["Pods"]
+    verbs: ["list"]
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: 
+  name: pod-restriction-bind 
+  labels: 
+    owner: pravin
+    permission: pods-restrictions
+  namespace: dev
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Subject
+    namespace: dev
+
+
+
+    
+cat <<EOF | kubectl apply -f -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: pravin
+spec:
+  request: $(cat pravin.csr | base64 -w 0)
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
+  usages:
+  - client auth
+EOF
+    
+
+cat /var/run/secrets/kubernetes.io/serviceaccount
+
+
+

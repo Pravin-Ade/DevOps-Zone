@@ -1,0 +1,17 @@
+apiVersion: 
+kind: 
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - image: high-data-container
+    name: high-data-container
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoreDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: size
+            operator: In
+            values:
+            - large

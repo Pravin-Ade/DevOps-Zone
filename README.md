@@ -5,3 +5,5 @@
 4. AWS
 5. Terraform
 6. GitHub Actions
+
+[K8s Reference!](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)
